@@ -1,0 +1,76 @@
+begintemplate SpinyCell
+// Publicly accessible sections and section lists
+public soma, dend, spine_neck, spine_head
+public all, spiny
+
+// Create the morphology: 1 soma, 1 dendrite, and 1 spine (neck + head)
+create soma, dend, spine_neck, spine_head
+objref all, spiny  // Section lists for traversal and grouping
+
+proc init() {
+    // Initialize section lists
+    all = new SectionList()    // List of all sections in the cell
+    spiny = new SectionList()  // List of spine-related sections
+
+    // ---------------------------
+    // Soma: Central processing unit of the neuron
+    // ---------------------------
+    soma {
+        L = 20               // Length in microns
+        diam = 20            // Diameter in microns
+        insert pas           // Insert passive membrane mechanism
+        cm = 1.0             // Membrane capacitance (μF/cm²)
+        Ra = 100             // Axial resistance (ohm·cm)
+        g_pas = 0.0001       // Passive conductance (S/cm²)
+        e_pas = -65          // Passive reversal potential (mV)
+        all.append()         // Add to all sections list
+    }
+
+    // ---------------------------
+    // Dendrite: Receives synaptic input from other cells
+    // ---------------------------
+    dend {
+        L = 200              // Long cable-like dendrite (μm)
+        diam = 2             // Thin dendrite (μm)
+        insert pas
+        cm = 1.0
+        Ra = 150
+        g_pas = 0.0002
+        e_pas = -65
+        connect soma(1), 0   // Attach dendrite to end of soma
+        all.append()
+    }
+
+    // ---------------------------
+    // Spine Neck: Narrow bridge from dendrite to spine head
+    // ---------------------------
+    spine_neck {
+        L = 1.5              // Narrow and long enough to isolate spine head (μm)
+        diam = 0.2
+        insert pas
+        cm = 1.0
+        Ra = 150             // High axial resistance limits current flow
+        g_pas = 0.0005
+        e_pas = -65
+        connect dend(0.5), 0 // Attach spine neck to midpoint of dendrite
+        all.append()
+        spiny.append()       // Mark as part of spine system
+    }
+
+    // ---------------------------
+    // Spine Head: Location of most excitatory synapses (e.g., glutamatergic)
+    // ---------------------------
+    spine_head {
+        L = 0.5              // Small, bulbous head (μm)
+        diam = 0.5
+        insert pas
+        cm = 1.0
+        Ra = 100             // Lower resistance allows local integration
+        g_pas = 0.0005
+        e_pas = -65
+        connect spine_neck(1), 0  // Attach head to end of neck
+        all.append()
+        spiny.append()
+    }
+}
+endtemplate SpinyCell
