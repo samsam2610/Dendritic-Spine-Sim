@@ -40,8 +40,16 @@ if not hasattr(cfg, 'afterSim'):
     cfg.afterSim = []
 cfg.afterSim.append(apply_tdcs_field)
 
-print("Starting sim ...")
-sim.createSimulateAnalyze(netParams, cfg)
+sim.create(netParams, cfg)
+
+# Apply any custom logic like tDCS (already added in cfg.afterSim)
+sim.simulate()
+
+# 🔥 Remove non-serializable objects before saving
+if hasattr(cfg, 'afterSim'):
+    del cfg.afterSim
+
+sim.analyze()
 
 # Remove afterSim from cfg before saving (avoid JSON error)
 if hasattr(cfg, 'afterSim'):
