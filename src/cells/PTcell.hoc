@@ -6,7 +6,6 @@
 //   apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint
 
 // load_file("morph.hoc")
-load_file("SpinyCell.hoc")
 
 /* *********************************************************** */
 
@@ -75,9 +74,6 @@ kBK_caVhminShift = 46.9679440782 // shift upwards to get lower effect on subthre
 cadad_depth = 0.102468419281 // original 1; reduced for tighter coupling of ica and cai
 cadad_taur = 16.0181691392 
 
-// Flag to control whether explicit spine compartments are used
-useExplicitSpines = 1  // set to 1 to use SpinyCell objects
-
 /* *********************************************************** */
 
 // 2010-11-01 Ben Suter
@@ -106,9 +102,9 @@ usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calgi
 // and before tuft (around 600 micron from soma)
 
 begintemplate PTcell 
-objref all, somatic, axonal, basal, apical, alldend, spiny, spineList, spineHeads, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+objref all, somatic, axonal, basal, apical, alldend, spiny, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
 objref stim, esyn, isyn,nil
-public all,somatic,basal,apical,spiny,alldend, spineHeads
+public all,somatic,basal,apical,spiny,alldend
 public apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
 public lambda_f,geom_nseg,recalculate_x_dist, sethgbar, stim, nc, reconfig
 external cap,rall,rm,spinecapfactor,Vrest,h_erev,h_gbar,h_gbar_tuft
@@ -3410,18 +3406,6 @@ func lambda_f () { local i, x1, x2, d1, d2, lam, freq, d_lambda
   return L/lam
 }
 
-proc add_spines() {
-    forsec spiny {
-        for (x, 0.2) {  // place a spine every 20% of length
-            objref s
-            s = new SpinyCell()
-            connect s.spine_neck(0), sec(x)  // connect neck to host section
-            spineList.append(s)
-            spineHeads.append(s.spine_head)
-        }
-    }
-}
-
 proc geom_nseg() { local freq, d_lambda, before, after, tmp
   // these are reasonable values for most models
   freq = 100      // Hz, frequency at which AC length constant will be computed
@@ -3441,13 +3425,9 @@ proc optimize_nseg () { // Ra, cm, spinecapfactor
         Ra = $1
         cm = $2
     }
-    if (!useExplicitSpines) {
-        // set the spine capacitance to be the same as the dendrite
-        // this is a bit of a hack, but it works
-        forsec spiny {
-            cm = $2 * cm  // spinecapfactor * cm
-            g_pas = $2 / rm // spinecapfactor * (1.0/rm)
-        }
+    forsec spiny {
+        cm = $3 * cm  // spinecapfactor * cm
+        g_pas = $3 / rm // spinecapfactor * (1.0/rm)
     }
     // optimize # of segments per section (do this afer setting Ra, cm)
     geom_nseg()
@@ -3543,15 +3523,15 @@ proc init_once() {
   setallprop()
   addapicchan()
   addbasalchan()
-  if (!useExplicitSpines) {
-    // set the spine capacitance to be the same as the dendrite
-    // this is a bit of a hack, but it works
-    forsec spiny {
-      cm = spinecapfactor * cm
-      g_pas = spinecapfactor / rm
-    }
+  forsec spiny {
+    cm = spinecapfactor * cm
+    // Adjust g_pas to compensate, to keep same time constant
+    // This is new as of 2011-02-14, because last week Michele Migliore said that
+    // the idea of a spine factor is to "add more membrane".
+    // I'm not sure about this, though, I thought I saw models that just
+    // increase the capacitance.
+    g_pas = spinecapfactor / rm
   }
-
   optimize_nseg(rall, cap, spinecapfactor)
   apicchanprop()
   basalchanprop()
@@ -3909,9 +3889,6 @@ proc init () {local b,i,ihMod
   celldef()
   access soma
   distance()
-  if (useExplicitSpines) {
-    add_spines()    // attach SpinyCell instances
-  }
   init_once()
   setsyns()
 }
