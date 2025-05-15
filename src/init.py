@@ -36,8 +36,13 @@ def apply_tdcs_field():
                 seg.e_extracellular = amp * ynorm
 
 # Attach to afterSim
-if not hasattr(cfg, 'afterSim'): cfg.afterSim = []
+if not hasattr(cfg, 'afterSim'):
+    cfg.afterSim = []
 cfg.afterSim.append(apply_tdcs_field)
 
 print("Starting sim ...")
 sim.createSimulateAnalyze(netParams, cfg)
+
+# Remove afterSim from cfg before saving (avoid JSON error)
+if hasattr(cfg, 'afterSim'):
+    del cfg.afterSim

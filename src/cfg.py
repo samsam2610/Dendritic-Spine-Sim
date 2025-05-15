@@ -52,7 +52,7 @@ cfg.recordStep = 0.1
 #------------------------------------------------------------------------------
 # Saving
 #------------------------------------------------------------------------------
-cfg.simLabel = 'M1detailed'
+cfg.simLabel = 'DendriticSpinySim'
 cfg.saveFolder = '.'
 cfg.savePickle = False
 cfg.saveJson = True
@@ -190,7 +190,7 @@ cfg.pulse = {'pop': 'None', 'start': 1000, 'end': 1200, 'rate': 20, 'noise': 0.5
 cfg.addIClamp = 0
 cfg.IClamp1 = {'pop': 'IT5B', 'sec': 'soma', 'loc': 0.5, 'start': 0, 'dur': 1000, 'amp': 0.50}
 
-cfg.addTDCS = 0
+cfg.addTDCS = 1
 cfg.tDCS = {
     'amp': 6e-6 / (0.3 * (3e-3 * 3e-3)),  # convert to field strength (V/m)
     'dir': [0, 1, 0],  # y-axis
