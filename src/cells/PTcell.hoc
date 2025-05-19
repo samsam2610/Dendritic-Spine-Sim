@@ -111,6 +111,8 @@ usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calgi
 // the apical dend cal,can conductances that are between nexus (~300 micron from soma)
 // and before tuft (around 600 micron from soma)
 xopen("SpinyCell.hoc")
+load_file("SpinyCell.hoc") // put this at the top of PTcell.hoc or your main hoc file
+
 
 begintemplate PTcell 
 objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
@@ -3881,13 +3883,13 @@ proc schedule_spine_plasticity() {
 }
 
 proc add_spines() {
-    strdef cmd, secName
     forsec spiny {
-        secName = secname()  // get name of current section
-        for (x, 0.1) {
+        // Inside a forsec loop, the current section is available implicitly
+        for (x, 0.1) {  // every 10% of the section
             spineObj = new SpinyCell()
-            sprint(cmd, "connect spineObj.spine_neck(0), %s(%g)", secName, x)
-            execute(cmd)
+            // Connect the spine's neck to the current section at location x
+            connect spineObj.spine_neck(0), sec(x)  
+            // Store references to the full spine and its head
             spineList.append(spineObj)
             spineHeads.append(spineObj.spine_head)
         }
