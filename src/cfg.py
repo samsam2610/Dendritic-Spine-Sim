@@ -85,8 +85,8 @@ cfg.analysis['plotShape'] = {
     'dpi': 600, 
     'saveFig': True,     
     'shapeParams': {
-        'cvals': {'spine': 1.0},  # this works if section names include 'spine'
-        'clim': [0.0, 1.0],
+        'cvals': 'cval',  # this works if section names include 'spine'
+        'clim': [0, 10],
         'colormap': 'viridis',
     }
 }
