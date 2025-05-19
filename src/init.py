@@ -79,7 +79,7 @@ def interpolate_pt3d(sec, x):
     raise RuntimeError(f"Interpolation failed for section {sec.name()}, x={x}")
 
 
-def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=2.5):
+def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
     import math
 
@@ -109,8 +109,8 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=2.5):
 
     # Place 3D points along the normal direction
     h.pt3dclear(sec=neck)
-    h.pt3dadd(z0, y0, x0, 0.2, sec=neck)
-    h.pt3dadd(z0 + nz * offset, y0 + ny * offset, x0 + nx * offset, 0.2, sec=neck)
+    h.pt3dadd(x0, z0, y0, 0.2, sec=neck)
+    h.pt3dadd(x0 + nx * offset, z0 + nz * offset, y0 + ny * offset, 0.2, sec=neck)
 
     # Register in cell.secs so NetPyNE can visualize
     cell.secs[f'spine_neck_{spine_idx}'] = {
@@ -119,8 +119,8 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=2.5):
         'topol': {'parentSec': parent_sec.name(), 'parentX': x, 'childX': 0.0},
         'mechs': {'pas': {'g': 0.001, 'e': -65}},
         'pt3d': [
-            [z0, y0, x0, neck.diam],
-            [z0 + nz * offset, y0 + ny * offset, x0 + nx * offset, neck.diam]
+            [x0, z0, y0, neck.diam],
+            [x0 + nx * offset, z0 + nz * offset, y0 + ny * offset, neck.diam]
         ],
         'color': 'red'
     }
