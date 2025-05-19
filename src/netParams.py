@@ -152,8 +152,9 @@ if 'PT5B_full' not in loadCellParams:
                 if secName in cellRule['secLists']['below_soma']: #secName.startswith('dend'):
                     mech['clk'] *= cfg.ihlkcBelowSoma  # modify ih conductance in soma+basal dendrites
     # Reduce dend Na to avoid dend spikes (compensate properties by modifying axon params)
-    for secName in cellRule['secLists']['alldend']:
+    for i, secName in enumerate(cellRule['secLists']['alldend']):
         cellRule['secs'][secName]['mechs']['nax']['gbar'] = 0.0153130368342 * cfg.dendNa # 0.25
+        cellRule['secs'][secName]['cval'] = i
     cellRule['secs']['soma']['mechs']['nax']['gbar'] = 0.0153130368342  * cfg.somaNa
     cellRule['secs']['axon']['mechs']['nax']['gbar'] = 0.0153130368342  * cfg.axonNa # 11
     cellRule['secs']['axon']['geom']['Ra'] = 137.494564931 * cfg.axonRa # 0.005

@@ -129,7 +129,8 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
         'pt3d': [
             [x0, y0, z0, neck.diam],
             [x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, neck.diam]
-        ]
+        ],
+        'color': 'red'
     }
 
     return neck
