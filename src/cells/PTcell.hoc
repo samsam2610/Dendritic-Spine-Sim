@@ -3860,8 +3860,11 @@ proc update_spine_plasticity() {
         }
 
         // Clamp to physiological bounds
-        if (spineObj.spine_neck.L > 5) s.spine_neck.L = 5
-        if (spineObj.spine_neck.L < 0.3) s.spine_neck.L = 0.3
+        if (spineObj.spine_neck.L > 5) {
+            spineObj.spine_neck.L = 5
+        }
+        if (spineObj.spine_neck.L < 0.3) {
+            s.spine_neck.L = 0.3
     }
 }
 
@@ -3873,14 +3876,14 @@ proc schedule_spine_plasticity() {
 proc add_spines() {
     forsec spiny {
         for (x, 0.1) {  // every 10% of the section
-            spineObj = new SpinyCell()
+            spiny = new SpinyCell()
 
             // Connect the spine's neck to the dendritic section at location x
-            connect spineObj.spine_neck(0), sec(x)
+            connect spiny.spine_neck(0), sec(x)
 
             // Store references to the full spine and its head
-            spineList.append(spineObj)
-            spineHeads.append(spineObj.spine_head)
+            spineList.append(spiny)
+            spineHeads.append(spiny.spine_head)
         }
     }
 }
