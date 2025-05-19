@@ -3901,6 +3901,10 @@ proc celldef () { localobj sp
         printf("Skipping section %s: only %d 3D points\\n", secname(), npts)
         continue  // skip sections with insufficient 3D geometry
       }
+      if (!(secname() =~ "apic" || secname() =~ "dend")) {
+        printf("Skipping section %s: not apic/dend\\n", secname())
+        continue
+      }
       arc_total = arc3d(npts-1)
         for (x = 0.0; x < 1.0; x += 0.2) {
             sp = new SpinyCell()
