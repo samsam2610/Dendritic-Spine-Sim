@@ -3,7 +3,11 @@ public spine_neck, spine_head
 objref rand
 create spine_neck, spine_head
 
-proc init() {
+proc init() { local x0, y0, z0, offset
+    x0 = $1
+    y0 = $2
+    z0 = $3
+    offset = 0.5
     rand = new Random()
     rand.uniform(0, 1)
 
@@ -21,8 +25,8 @@ proc init() {
         g_pas = get_g_pas(L, diam)
         e_pas = -65
         pt3dclear()
-        pt3dadd(0, 0, 0, diam)
-        pt3dadd(0, L, 0, diam)
+        pt3dadd(x0, y0, z0, 0.2)
+        pt3dadd(x0, y0 + offset, z0, 0.2)
     }
 
     // Randomize head geometry
@@ -39,8 +43,8 @@ proc init() {
         g_pas = get_g_pas(L, diam)
         e_pas = -65
         pt3dclear()
-        pt3dadd(0, 0, 0, diam)
-        pt3dadd(0, L, 0, diam)
+        pt3dadd(x0, y0 + offset, z0, 0.5)
+        pt3dadd(x0, y0 + offset + 0.4, z0, 0.5)
     }
 
     connect spine_head(0), spine_neck(1)

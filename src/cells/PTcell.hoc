@@ -3896,7 +3896,6 @@ proc celldef () { localobj sp
     spineHeads = new List()
     
     forsec alldend {
-      access sec
       npts = n3d()
       if (npts < 2) {
         printf("Skipping section %s: only %d 3D points\\n", secname(), npts)
@@ -3904,9 +3903,7 @@ proc celldef () { localobj sp
       }
       arc_total = arc3d(npts-1)
         for (x = 0.0; x < 1.0; x += 0.2) {
-            sp = new SpinyCell()
-            connect sp.spine_neck(0), x
-            spineList.append(sp)
+
             // Find closest 3D point on parent
             target_arc = x * arc_total
             min_dist = 1e9
@@ -3923,17 +3920,9 @@ proc celldef () { localobj sp
             y0 = y3d(best_i)
             z0 = z3d(best_i)
             offset = 0.5 // offset for the spine head
-            print "Creating spine at section %s, x = %.2f, y = %.2f, z = %.2f\\n", secname(), x0, y0, z0
-            access sp.spine_neck
-            pt3dclear()
-            pt3dadd(x0, y0, z0, 0.2)
-            pt3dadd(x0, y0 + offset, z0, 0.2)
-            
-            access sp.spine_head
-            pt3dclear()
-            pt3dadd(x0, y0 + offset, z0, 0.5)
-            pt3dadd(x0, y0 + offset + 0.4, z0, 0.5)
-
+            sp = new SpinyCell(x0, y0, z0, offset) // create a new spine object
+            connect sp.spine_neck(0), x
+            spineList.append(sp)
 
 
         }
