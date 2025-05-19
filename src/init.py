@@ -56,7 +56,19 @@ else:
             print(f"❌ PT cell {idx}: No spines found in cell.secs")
 
 from neuron import h
-import math
+from math import cos, sin, pi
+
+def get_xyz_at_x(sec, x):
+    """
+    Return (x, y, z) position at a given normalized location `x` along `sec`
+    """
+    from neuron import h
+    x_val = h.ref(0.0)
+    y_val = h.ref(0.0)
+    z_val = h.ref(0.0)
+    h.loc3d(x, x_val, y_val, z_val, sec=sec)
+    return x_val[0], y_val[0], z_val[0]
+
 
 def add_spines_to_PT5B_cells():
     spine_idx = 0
@@ -69,7 +81,7 @@ def add_spines_to_PT5B_cells():
                     parent = cell.secs[secName]['hObj']
                     for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
                         # Get 3D coordinates at position x along the dendrite
-                        x3d, y3d, z3d = parent.x3d(x), parent.y3d(x), parent.z3d(x)
+                        x3d, y3d, z3d = get_xyz_at_x(parent, x)
 
                         # Offset vector (you can randomize angle if you want)
                         angle = 2 * math.pi * (spine_idx % 10) / 10  # simple rotation
