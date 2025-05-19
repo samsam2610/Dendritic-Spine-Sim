@@ -159,7 +159,7 @@ for cell in sim.net.cells:
         for secName in cell.secs:
             if secName.startswith('spine_neck'):
                 sec = cell.secs[secName]['hObj']
-                parent_conn = sec.trueparent()  # Get the parent Section object
+                parent_conn = sec.trueparentseg()  # Get the parent Section object
                 print(f"{secName} connected to: {parent_conn.name()}")
 
 def get_3d_path(sec):
