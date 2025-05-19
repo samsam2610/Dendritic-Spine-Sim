@@ -134,7 +134,8 @@ if 'PT5B_full' not in loadCellParams:
     nonSpiny = ['apic_0', 'apic_1']
     netParams.addCellParamsSecList(label='PT5B_full', secListName='perisom', somaDist=[0, 50])  # sections within 50 um of soma
     netParams.addCellParamsSecList(label='PT5B_full', secListName='below_soma', somaDistY=[-600, 0])  # sections within 0-300 um of soma
-    for sec in nonSpiny: cellRule['secLists']['perisom'].remove(sec)
+    for sec in nonSpiny:
+        cellRule['secLists']['perisom'].remove(sec)
     cellRule['secLists']['alldend'] = [sec for sec in cellRule.secs if ('dend' in sec or 'apic' in sec)] # basal+apical
     cellRule['secLists']['apicdend'] = [sec for sec in cellRule.secs if ('apic' in sec)] # apical
     cellRule['secLists']['spiny'] = [sec for sec in cellRule['secLists']['alldend'] if sec not in nonSpiny]
