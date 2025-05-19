@@ -79,7 +79,7 @@ def interpolate_pt3d(sec, x):
     raise RuntimeError(f"Interpolation failed for section {sec.name()}, x={x}")
 
 
-def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
+def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=2.5):
     """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
     import math
 
