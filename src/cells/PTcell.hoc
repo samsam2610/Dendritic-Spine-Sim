@@ -3887,56 +3887,30 @@ proc mkstim () {
   }
 }
 
-proc celldef() { local x, i, npts, best_i, min_dist, dist, arc, arc_total, target_arc, x0, y0, z0, offset, sp
+proc celldef () { localobj sp, npts, best_i, min_dist, dist, arc, arc_total, target_arc, x0, y0, z0, offset
+  topol()
+  subsets()
+  // geom_nseg()
+  if (useExplicitSpines) {
+    spineList = new List()
+    spineHeads = new List()
     
-
-    topol()
-    subsets()
-    // geom_nseg()
-
-    if (useExplicitSpines) {
-        spineList = new List()
-
-        forsec alldend {
-            npts = n3d()
-            arc_total = arc3d(npts-1)
-            for (x = 0.0; x < 1.0; x += 0.05) {
-                // 1. Create and connect the spine
-                sp = new SpinyCell()
-                connect sp.spine_neck(0), x
-                spineList.append(sp)
-
-                // 2. Find closest 3D point on parent
-                target_arc = x * arc_total
-                min_dist = 1e9
-                best_i = 0
-                for i=0, npts-1 {
-                    arc = arc3d(i)
-                    dist = abs(arc - target_arc)
-                    if (dist < min_dist) {
-                        min_dist = dist
-                        best_i = i
-                    }
-                }
-                x0 = x3d(best_i)
-                y0 = y3d(best_i)
-                z0 = z3d(best_i)
-
-                // 3. Give the spine its 3D geometry (sticks out +Y, for demo)
-                offset = 1   // microns
-                access sp.spine_neck
-                pt3dclear()
-                pt3dadd(x0, y0, z0, sp.spine_neck.diam)
-                pt3dadd(x0, y0 + offset, z0, sp.spine_neck.diam)
-                access sp.spine_head
-                pt3dclear()
-                pt3dadd(x0, y0 + offset, z0, sp.spine_head.diam)
-                pt3dadd(x0, y0 + offset + 0.4, z0, sp.spine_head.diam)
-            }
+    forsec alldend {
+      npts = n3d()
+      arc_total = arc3d(npts-1)
+        for (x = 0.0; x < 1.0; x += 0.05) {
+            sp = new SpinyCell()
+            connect sp.spine_neck(0), x
+            spineList.append(sp)
         }
     }
-}
 
+
+    // add_spines()  
+    cvode = new CVode()
+    cvode.event(100, "update_spine_plasticity()") // Update spine plasticity every 100 ms
+  }
+}
 
 proc setsyns () { localobj syn
   asynl=new List() nsynl=new List() gsynl=new List() g2synl=new List()
