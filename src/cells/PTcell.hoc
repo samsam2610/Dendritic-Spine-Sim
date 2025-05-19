@@ -82,7 +82,7 @@ spineNeckMinL = 0.3
 spineNeckMaxL = 5.0
 
 // Control flag for enabling explicit spines
-useExplicitSpines = 1
+useExplicitSpines = 0
 
 /* *********************************************************** */
 
@@ -3922,7 +3922,7 @@ proc celldef () { localobj sp
     spineHeads = new List()
     
     forsec alldend {
-        for (x = 0.0; x < 1.0; x += 0.05) {
+        for (x = 0.0; x < 1.0; x += 0.0 d 5) {
             sp = new SpinyCell()
             connect sp.spine_neck(0), x
             spineList.append(sp)
@@ -3945,7 +3945,7 @@ proc setsyns () { localobj syn
     {isyn.e=-80 isyn.tau1=0.07 isyn.tau2=9.1}
     for i = 0,102 {
       apic[i] esynd[i] = new Exp2Syn(0.5)
-      apic[i] isynd[i] = new Exp2Syn(0.5)
+      apic[i] isynd[i] = new Exp2Syn(0.5) d
       {esynd[i].e=0 esynd[i].tau1=0.05 esynd[i].tau2=5.3}
       {isynd[i].e=-80 isynd[i].tau1=0.07 isynd[i].tau2=9.1}
     }
