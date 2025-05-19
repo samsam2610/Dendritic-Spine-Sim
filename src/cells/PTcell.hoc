@@ -3864,7 +3864,7 @@ proc update_spine_plasticity() {
             spineObj.spine_neck.L = 5
         }
         if (spineObj.spine_neck.L < 0.3) {
-            s.spine_neck.L = 0.3
+            spineObj.spine_neck.L = 0.3
     }
 }
 
