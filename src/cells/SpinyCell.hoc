@@ -1,13 +1,35 @@
 begintemplate SpinyCell
     public spine_neck, spine_head
+    objref rand_neckL, rand_neckD, rand_headL, rand_headD
     create spine_neck, spine_head
 
     proc init() {
+        // Initialize Random objects if not yet created (per instance)
+        if (rand_neckL == nil) {
+            rand_neckL = new Random()
+            rand_neckL.uniform(0.05, 0.2)    // neck length: 0.05–0.2 μm
+
+            rand_neckD = new Random()
+            rand_neckD.uniform(0.15, 0.25)   // neck diam: 0.15–0.25 μm
+
+            rand_headL = new Random()
+            rand_headL.uniform(0.4, 0.7)     // head length: 0.4–0.7 μm
+
+            rand_headD = new Random()
+            rand_headD.uniform(0.35, 0.65)   // head diam: 0.35–0.65 μm
+        }
+
+        // Draw random values for geometry
+        neck_L = rand_neckL.repick()
+        neck_diam = rand_neckD.repick()
+        head_L = rand_headL.repick()
+        head_diam = rand_headD.repick()
+
         // Configure spine neck
         spine_neck {
             nseg = 1
-            L = 0.05 + 0.15 * random()  // 0.05–0.2 μm
-            diam = 0.15 + 0.1 * random() // 0.15–0.25 μm
+            L = neck_L
+            diam = neck_diam
             insert pas
             cm = 1.0
             Ra = 150
@@ -21,8 +43,8 @@ begintemplate SpinyCell
         // Configure spine head
         spine_head {
             nseg = 1
-            L = 0.4 + 0.3 * random()   // 0.4–0.7 μm
-            diam = 0.35 + 0.3 * random() // 0.35–0.65 μm
+            L = head_L
+            diam = head_diam
             insert pas
             cm = 1.0
             Ra = 100
