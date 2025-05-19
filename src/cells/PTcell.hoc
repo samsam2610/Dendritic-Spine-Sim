@@ -3901,10 +3901,6 @@ proc celldef () { localobj sp
         printf("Skipping section %s: only %d 3D points\\n", secname(), npts)
         continue  // skip sections with insufficient 3D geometry
       }
-      if (!(secname() =~ "apic" || secname() =~ "dend")) {
-        printf("Skipping section %s: not apic/dend\\n", secname())
-        continue
-      }
       arc_total = arc3d(npts-1)
         for (x = 0.0; x < 1.0; x += 0.2) {
             sp = new SpinyCell()
@@ -3926,15 +3922,15 @@ proc celldef () { localobj sp
             y0 = y3d(best_i)
             z0 = z3d(best_i)
             offset = 0.5 // offset for the spine head
-            access sp.spine_neck
-            pt3dclear()
-            pt3dadd(x0, y0, z0, 0.2)
-            pt3dadd(x0, y0 + offset, z0, 0.2)
+            // access sp.spine_neck
+            // pt3dclear()
+            // pt3dadd(x0, y0, z0, 0.2)
+            // pt3dadd(x0, y0 + offset, z0, 0.2)
             
-            access sp.spine_head
-            pt3dclear()
-            pt3dadd(x0, y0 + offset, z0, 0.5)
-            pt3dadd(x0, y0 + offset + 0.4, z0, 0.5)
+            // access sp.spine_head
+            // pt3dclear()
+            // pt3dadd(x0, y0 + offset, z0, 0.5)
+            // pt3dadd(x0, y0 + offset + 0.4, z0, 0.5)
 
 
 
