@@ -3923,6 +3923,9 @@ proc celldef () { localobj sp
     // Loop over every dendritic section (basal + apical)
     forsec alldend {
       for (x, 0.1) {          // every 10% of the section
+
+        sp = new SpinyCell()                        // instantiate a spine
+        connect sp.spine_neck(0), x  
         // Debug prints
         // ————————— Debug block —————————
         print ">>> DEBUG: spineList pointer =", spineList
@@ -3934,9 +3937,7 @@ proc celldef () { localobj sp
         }
         // —————————————————————————————————————
 
-
-        sp = new SpinyCell()                        // instantiate a spine
-        connect sp.spine_neck(0), x                 // hang its neck at position x
+               // hang its neck at position x
         spineList.append(sp)                        // track the entire spine
         spineHeads.append(sp.spine_head)            // track just the head
       }
