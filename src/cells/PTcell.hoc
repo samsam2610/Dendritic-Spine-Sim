@@ -3876,6 +3876,10 @@ proc update_spine_plasticity() {
     }
 }
 
+proc schedule_spine_plasticity() {
+  cvode.event(t + 0.1, "update_spine_plasticity()")
+}
+
 proc add_spines() {
     forsec spiny {
         for (x, 0.1) {  // every 10% of the section
