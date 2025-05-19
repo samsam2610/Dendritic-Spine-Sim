@@ -82,7 +82,7 @@ spineNeckMinL = 0.3
 spineNeckMaxL = 5.0
 
 // Control flag for enabling explicit spines
-useExplicitSpines = 0
+useExplicitSpines = 1
 
 /* *********************************************************** */
 
