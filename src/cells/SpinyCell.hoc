@@ -12,6 +12,9 @@ proc init() {
         Ra = 150
         g_pas = 0.0005
         e_pas = -65
+        pt3dclear()
+        pt3dadd(0,0,0, diam)    // start point at connection
+        pt3dadd(0, L, 0, diam)  // end point
     }
 
     // Spine Head: integrates local synaptic input
@@ -23,6 +26,9 @@ proc init() {
         Ra = 100
         g_pas = 0.0005
         e_pas = -65
+        pt3dclear()
+        pt3dadd(0,0,0, diam)
+        pt3dadd(0, L, 0, diam)
         connect spine_head(0), spine_neck(1)
     }
 }

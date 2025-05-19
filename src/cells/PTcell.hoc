@@ -3891,6 +3891,7 @@ proc add_spines() { localobj spineCell
             connect spineCell.spine_neck(0), x  
             // Store references to the full spine and its head
             spineList.append(spineCell)
+            spineHeads.append(spineCell.spine_head)
         }
     }
 }
