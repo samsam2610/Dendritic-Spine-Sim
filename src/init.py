@@ -49,7 +49,7 @@ if not pt_cells:
 else:
     for i, cell in enumerate(pt_cells):
         try:
-            if hasattr(h, 'cell') and hasattr(h.cell, 'spineList'):
+            if hasattr(h.cell, 'spineList'):
                 n_spines = int(h.cell.spineList.count())
                 print(f"✅ PT cell {i}: {n_spines} spines initialized.")
             else:
