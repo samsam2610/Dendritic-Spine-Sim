@@ -3922,7 +3922,7 @@ proc celldef () { localobj sp
     spineHeads = new List()
     
     forsec alldend {
-        for (x = 0.0; x < 1.0; x += 0.0 d 5) {
+        for (x = 0.0; x < 1.0; x += 0.05) {
             sp = new SpinyCell()
             connect sp.spine_neck(0), x
             spineList.append(sp)
