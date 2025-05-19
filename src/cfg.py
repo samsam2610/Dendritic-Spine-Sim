@@ -201,7 +201,7 @@ cfg.pulse = {'pop': 'None', 'start': 1000, 'end': 1200, 'rate': 20, 'noise': 0.5
 #------------------------------------------------------------------------------
 # Current inputs
 #------------------------------------------------------------------------------
-cfg.addIClamp = 1
+cfg.addIClamp = 0
 cfg.IClamp1 = {'pop': 'PT5B', 'sec': 'soma', 'loc': 0.5, 'start': 0, 'dur': 2000, 'amp': 6}
 
 cfg.addTDCS = 0
