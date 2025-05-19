@@ -74,6 +74,12 @@ kBK_caVhminShift = 46.9679440782 // shift upwards to get lower effect on subthre
 cadad_depth = 0.102468419281 // original 1; reduced for tighter coupling of ica and cai
 cadad_taur = 16.0181691392 
 
+// Spine parameters
+spinePlasticityVThreshold = -40
+spineNeckGrowStep = 0.05
+spineNeckShrinkStep = 0.01
+
+
 /* *********************************************************** */
 
 // 2010-11-01 Ben Suter

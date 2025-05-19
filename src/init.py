@@ -42,6 +42,21 @@ cfg.afterSim.append(apply_tdcs_field)
 
 sim.create(netParams, cfg)
 
+# 🔍 Check for spine initialization in PT cells
+pt_cells = [cell for cell in sim.net.cells if cell.tags.get('cellType') == 'PT']
+if not pt_cells:
+    print("⚠️  No PT cells found in network.")
+else:
+    for i, cell in enumerate(pt_cells):
+        try:
+            if hasattr(h, 'cell') and hasattr(h.cell, 'spineList'):
+                n_spines = int(h.cell.spineList.count())
+                print(f"✅ PT cell {i}: {n_spines} spines initialized.")
+            else:
+                print(f"❌ PT cell {i}: Spines not initialized.")
+        except Exception as e:
+            print(f"⚠️  PT cell {i}: Error checking spines -> {e}")
+
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()
 

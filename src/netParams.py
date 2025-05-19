@@ -118,6 +118,14 @@ for label, p in reducedCells.items():  # create cell rules that were not loaded
 
 
 #------------------------------------------------------------------------------
+# Helper function to set spine plasticity parameters
+def set_spine_plasticity_params():
+    h.spineNeckGrowStep = cfg.spineNeckGrowStep
+    h.spineNeckShrinkStep = cfg.spineNeckShrinkStep
+    h.spinePlasticityVThreshold = cfg.spinePlasticityVThreshold
+    h.spineNeckMinL = cfg.spineNeckMinL
+    h.spineNeckMaxL = cfg.spineNeckMaxL
+    
 ## PT5B full cell model params (700+ comps)
 if 'PT5B_full' not in loadCellParams:
     ihMod2str = {'harnett': 1, 'kole': 2, 'migliore': 3}
@@ -155,9 +163,18 @@ if 'PT5B_full' not in loadCellParams:
 
     # Temporary fix: reduce size of axon for viewing purposes
     cellRule['secs']['axon']['geom']['pt3d'] = cellRule['secs']['axon']['geom']['pt3d'][0:1]
-
+    
+     # NEW: Add this check to insert spines
+    if cfg.useExplicitSpines:
+        from neuron import h
+        set_spine_plasticity_params()
+        for sec in h.allsec():
+            sec.push()
+        h("cell.add_spines()")  # Assumes this method exists in PTcell
+        
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
     netParams.saveCellParamsRule(label='PT5B_full', fileName='cells/PT5B_full_cellParams.pkl')
+
 
 
 #------------------------------------------------------------------------------

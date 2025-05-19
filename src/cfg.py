@@ -205,3 +205,28 @@ cfg.addNetStim = 0
 
 cfg.NetStim1 = {'pop': 'IT2', 'ynorm':[0,1], 'sec': 'soma', 'loc': 0.5, 'synMech': ['AMPA'], 'synMechWeightFactor': [1.0],
 				'start': 500, 'interval': 1000.0/60.0, 'noise': 0.0, 'number': 60.0, 'weight': 30.0, 'delay': 0}
+
+
+#------------------------------------------------------------------------------
+# SpinyCell configuration and spine plasticity
+#------------------------------------------------------------------------------
+
+# Whether to explicitly attach SpinyCell compartments to dendrites
+cfg.useExplicitSpines = True
+
+# Control dynamic plasticity of spine necks
+cfg.useSpinePlasticity = True
+
+# Spine plasticity update frequency (in ms)
+cfg.spinePlasticityInterval = 5.0
+
+# Voltage threshold (mV) above which spine neck elongates
+cfg.spinePlasticityVThreshold = -40.0
+
+# Rate of change in spine neck length (μm)
+cfg.spineNeckGrowStep = 0.05  # if v > threshold
+cfg.spineNeckShrinkStep = 0.01  # if v <= threshold
+
+# Clamp bounds on spine neck length
+cfg.spineNeckMinL = 0.3
+cfg.spineNeckMaxL = 5.0
