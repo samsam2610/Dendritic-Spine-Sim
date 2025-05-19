@@ -5,7 +5,7 @@ begintemplate SpinyCell
 
     proc init() {
         // Initialize Random objects if not yet created (per instance)
-        if (rand_neckL == nil) {
+        if (rand_neckL == 0) {
             rand_neckL = new Random()
             rand_neckL.uniform(0.05, 0.2)    // neck length: 0.05–0.2 μm
 
