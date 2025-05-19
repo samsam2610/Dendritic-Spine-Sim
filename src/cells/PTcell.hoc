@@ -3867,7 +3867,6 @@ proc update_spine_plasticity() {
             print "Spine ", i, " elongated to ", spineObj.spine_neck.L
         } else {
             spineObj.spine_neck.L -= 0.01
-            print "Spine ", i, " shrunk to ", spineObj.spine_neck.L
         }
 
         // Clamp to physiological bounds
@@ -3915,7 +3914,6 @@ proc mkstim () {
 }
 
 proc celldef () { localobj sp
-  local x sec
   topol()
   subsets()
   // geom_nseg()
@@ -3925,27 +3923,19 @@ proc celldef () { localobj sp
     
     // Loop over every dendritic section (basal + apical)
     forsec alldend {
-
-      // place a spine every 20% along this section
-      for (x = 0.0; x < 1.0; x += 0.2) {
-        print "Adding spine at section ", secname(), " at x=", x
-
-        // pass the section pointer ($sec) and x location into the template
+      for (x = 0.0; x < 1.0; x += 0.05) {          // every 10% of the section
+        print "Adding spine at section ", secname(), " at x=", x  
+        // sp = new SpinyCell()                        // instantiate a spine
         sp = new SpinyCell(sec, x)
-
-        // the template’s init() already did:
-        //   create spine_neck, spine_head
-        //   connect spine_neck(0), parent(xloc)
-        //   connect spine_head(0), spine_neck(1)
-
-        spineList.append(sp)               // track the whole spine
-        spineHeads.append(sp.spine_head)   // track just the head, if you like
+        // connect sp.spine_neck(0), x 
+        spineList.append(sp)                        // track the entire spine
+        // spineHeads.append(sp.spine_head)            // track just the head
       }
+    }
 
     // add_spines()  
     cvode = new CVode()
     cvode.event(100, "update_spine_plasticity()") // Update spine plasticity every 100 ms
-    }
   }
 }
 
