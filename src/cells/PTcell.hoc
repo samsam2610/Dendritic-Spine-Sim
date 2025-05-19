@@ -110,6 +110,7 @@ usemigliore = 0  // whether to use the migliore 2012 HCN (ih_migliore.mod, inste
 usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calginc to scale
 // the apical dend cal,can conductances that are between nexus (~300 micron from soma)
 // and before tuft (around 600 micron from soma)
+xopen("SpinyCell.hoc")
 
 begintemplate PTcell 
 objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
