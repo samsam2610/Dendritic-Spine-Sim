@@ -3903,7 +3903,6 @@ proc celldef () { localobj sp
       }
       arc_total = arc3d(npts-1)
         for (x = 0.0; x < 1.0; x += 0.01) {
-            printf("Creating spine at %s, x = %f", secname(), x)
             // Find closest 3D point on parent
             target_arc = x * arc_total
             min_dist = 1e9
@@ -3919,7 +3918,7 @@ proc celldef () { localobj sp
             x0 = x3d(best_i)
             y0 = y3d(best_i)
             z0 = z3d(best_i)
-            offset = 0.5 // offset for the spine head
+            offset = 20 // offset for the spine head
             sp = new SpinyCell(x0, y0, z0, offset) // create a new spine object
             connect sp.spine_neck(0), x
             spineList.append(sp)

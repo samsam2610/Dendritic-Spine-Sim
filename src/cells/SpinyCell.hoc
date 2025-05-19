@@ -7,7 +7,7 @@ proc init() { local x0, y0, z0, offset
     x0 = $1
     y0 = $2
     z0 = $3
-    offset = 0.5
+    offset = 20
     rand = new Random()
     rand.uniform(0, 1)
 
