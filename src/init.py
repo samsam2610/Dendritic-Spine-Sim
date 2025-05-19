@@ -157,14 +157,7 @@ def get_3d_path(sec):
 #                     parent_x = topol.get('parentX', 'unknown')
 #                     print(f"{secName} connected to: {parent_name} at x={parent_x}")
 
-    
 
-#     for cell in sim.net.cells:
-#         if cell.tags.get('cellType') == 'PT':
-#             for secName in cell.secs:
-#                 if secName.startswith('spine_neck'):
-#                     pt3d = get_3d_path(cell.secs[secName]['hObj'])
-#                     print(f"{secName} 3D path: {pt3d}")
 
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()

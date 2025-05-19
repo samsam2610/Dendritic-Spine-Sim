@@ -3927,8 +3927,6 @@ proc celldef () { localobj sp
 
         }
     }
-
-
     // add_spines()  
     cvode = new CVode()
     cvode.event(100, "update_spine_plasticity()") // Update spine plasticity every 100 ms
