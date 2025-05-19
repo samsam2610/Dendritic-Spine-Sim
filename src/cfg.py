@@ -28,7 +28,7 @@ cfg.random123 = False # enable random123 for coreneuron compatibility
 cfg.verbose = 1
 cfg.createNEURONObj = True
 cfg.createPyStruct = True
-cfg.cvode_active = True
+cfg.cvode_active = False
 cfg.cvode_atol = 1e-3
 cfg.cache_efficient = True
 cfg.printRunTime = 0.1
@@ -96,7 +96,7 @@ cfg.analysis['plotShape'] = {
 #------------------------------------------------------------------------------
 cfg.cellmod =  {'IT2': 'HH_reduced',
 				'IT4': 'HH_reduced',
-				'IT5A': 'HH_full',
+				'IT5A': 'HH_reduced',
 				'IT5B': 'HH_reduced',
 				'PT5B': 'HH_full',
 				'IT6': 'HH_reduced',
