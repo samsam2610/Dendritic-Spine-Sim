@@ -45,7 +45,7 @@ allpops = ['IT2','PV2','SOM2','IT4','IT5A','PV5A','SOM5A','IT5B','PT5B','PV5B','
 
 cfg.recordTraces = {'V_soma': {'sec':'soma', 'loc':0.5, 'var':'v'}}
 
-cfg.recordStim = False
+cfg.recordStim = True
 cfg.recordTime = False
 cfg.recordStep = 0.1
 

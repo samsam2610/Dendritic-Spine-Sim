@@ -102,10 +102,12 @@ usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calgi
 // and before tuft (around 600 micron from soma)
 
 begintemplate PTcell 
-objref all, somatic, axonal, basal, apical, alldend, spiny, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+objref spineList, spineHeads, spiny
 objref stim, esyn, isyn,nil
 public all,somatic,basal,apical,spiny,alldend
 public apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
+public spineList, spineHeads, spiny
 public lambda_f,geom_nseg,recalculate_x_dist, sethgbar, stim, nc, reconfig
 external cap,rall,rm,spinecapfactor,Vrest,h_erev,h_gbar,h_gbar_tuft
 external nax_gbar,nax_gbar_axonm,kdr_gbar,kdr_gbar_axonm, nax_gbar_somam, nax_gbar_dendm, mnax
@@ -3839,6 +3841,47 @@ proc sethgbar () { local xd
 
 }
 
+// Update Spine plasticity
+proc update_spine_plasticity() {
+    for i = 0, spineList.count() - 1 {
+        objref s
+        s = spineList.o(i)
+
+        // Basic voltage-based rule (e.g., LTP = elongate)
+        if (s.spine_head.v(0.5) > -40) {
+            s.spine_neck.L += 0.05
+        } else {
+            s.spine_neck.L -= 0.01
+        }
+
+        // Clamp to physiological bounds
+        if (s.spine_neck.L > 5) s.spine_neck.L = 5
+        if (s.spine_neck.L < 0.3) s.spine_neck.L = 0.3
+    }
+}
+
+proc schedule_spine_plasticity() {
+    update_spine_plasticity()
+    cvode.event(t + 5, "cell.schedule_spine_plasticity()")  // every 5 ms
+}
+
+proc add_spines() {
+    forsec spiny {
+        for (x, 0.1) {  // every 10% of the section
+            objref s
+            s = new SpinyCell()
+
+            // Connect the spine's neck to the dendritic section at location x
+            connect s.spine_neck(0), sec(x)
+
+            // Store references to the full spine and its head
+            spineList.append(s)
+            spineHeads.append(s.spine_head)
+        }
+    }
+}
+
+
 proc init_extra() {
     // hook for on-the-fly changes
     // override this function def at command-line as needed
@@ -3889,6 +3932,11 @@ proc init () {local b,i,ihMod
   celldef()
   access soma
   distance()
+  spineList = new List()
+  spineHeads = new List()
+
+  add_spines()  // <<< ✅ This will use spineList
+
   init_once()
   setsyns()
 }
