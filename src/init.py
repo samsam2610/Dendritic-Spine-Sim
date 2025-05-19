@@ -58,55 +58,30 @@ else:
 from neuron import h
 from math import cos, sin, pi
 
-def interpolate_pt3d(sec, x_norm):
-    """Return interpolated (x, y, z) position at normalized location x in sec"""
-    n3d = int(h.n3d(sec=sec))
-    if n3d < 2:
-        raise ValueError("Section has fewer than 2 pt3d points")
-
-    arc_len_total = h.arc3d(n3d-1, sec=sec)
-    target_arc = x_norm * arc_len_total
-
-    for i in range(1, n3d):
-        arc_i = h.arc3d(i, sec=sec)
-        arc_prev = h.arc3d(i-1, sec=sec)
-        if arc_i >= target_arc:
-            # Interpolate between pt3d(i-1) and pt3d(i)
-            frac = (target_arc - arc_prev) / (arc_i - arc_prev + 1e-12)
-            x0, y0, z0 = h.x3d(i-1, sec=sec), h.y3d(i-1, sec=sec), h.z3d(i-1, sec=sec)
-            x1, y1, z1 = h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec)
-            x3d = x0 + frac * (x1 - x0)
-            y3d = y0 + frac * (y1 - y0)
-            z3d = z0 + frac * (z1 - z0)
-            return x3d, y3d, z3d
-
-    # Fallback if loop fails
-    return h.x3d(n3d-1, sec=sec), h.y3d(n3d-1, sec=sec), h.z3d(n3d-1, sec=sec)
-
-from neuron import h
-import math
-
 def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
-    from neuron import h
     import math
+    from neuron import h
+    import numpy as np
 
-    # Interpolate 3D coordinates
+    # Interpolate 3D coordinates and tangent vector
     x0, y0, z0 = interpolate_pt3d(parent_sec, x)
-
-    # Estimate tangent vector by small step ahead
-    dx = 0.01
-    x1 = min(x + dx, 1.0)
+    x1 = min(x + 0.01, 1.0)
     x1_pos = interpolate_pt3d(parent_sec, x1)
-    tangent = [x1_pos[i] - x0 for i in range(3)]
+    tangent = np.array([x1_pos[0] - x0, x1_pos[1] - y0, x1_pos[2] - z0])
+    tangent_norm = np.linalg.norm(tangent)
 
-    # Compute perpendicular direction vector (approximate normal)
-    # Just rotate in XY plane (assumes flat morphology)
-    tx, ty, tz = tangent
-    norm_len = math.sqrt(tx**2 + ty**2 + 1e-9)
-    nx, ny, nz = -ty / norm_len, tx / norm_len, 0  # perpendicular in XY
+    if tangent_norm < 1e-6:
+        tangent = np.array([1, 0, 0])
+    else:
+        tangent = tangent / tangent_norm
 
-    # Create neck
+    # Use a fixed up vector and take cross product for normal
+    up = np.array([0, 0, 1]) if abs(tangent[2]) < 0.99 else np.array([0, 1, 0])
+    normal = np.cross(tangent, up)
+    normal /= np.linalg.norm(normal)
+
+    # Create neck section
     neck = h.Section(name=f"spine_neck_{spine_idx}")
     neck.L = spine_length
     neck.diam = 0.2
@@ -115,12 +90,14 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     neck.e_pas = -65
     neck.connect(parent_sec(x), 0.0)
 
-    # Place 3D points along the normal direction
+    # Apply 3D coordinates to visualize properly
     h.pt3dclear(sec=neck)
-    h.pt3dadd(x0, y0, z0, 0.2, sec=neck)
-    h.pt3dadd(x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, 0.2, sec=neck)
+    h.pt3dadd(x0, y0, z0, neck.diam, sec=neck)
+    h.pt3dadd(x0 + offset * normal[0],
+              y0 + offset * normal[1],
+              z0 + offset * normal[2], neck.diam, sec=neck)
 
-    # Register in cell.secs so NetPyNE can visualize
+    # Register for NetPyNE visualization
     cell.secs[f'spine_neck_{spine_idx}'] = {
         'hObj': neck,
         'geom': {'L': neck.L, 'diam': neck.diam},
@@ -128,12 +105,13 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
         'mechs': {'pas': {'g': 0.001, 'e': -65}},
         'pt3d': [
             [x0, y0, z0, neck.diam],
-            [x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, neck.diam]
+            [x0 + offset * normal[0], y0 + offset * normal[1], z0 + offset * normal[2], neck.diam]
         ],
         'color': 'red'
     }
 
     return neck
+
 
 
 
