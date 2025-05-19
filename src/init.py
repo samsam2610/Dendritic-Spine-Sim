@@ -62,7 +62,7 @@ def add_spines_to_PT5B_cells():
         if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
             for secName in cell.secs:
                 if 'apic' in secName or 'dend' in secName:  # only dendritic
-                    sec = cell.secs[secName]['hObj']
+                    parent = cell.secs[secName]['hObj']
                     for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
                         neck = h.Section(name=f'spine_neck_{spine_idx}')
                         neck.L = 1.5
@@ -70,8 +70,18 @@ def add_spines_to_PT5B_cells():
                         neck.insert('pas')
                         neck.g_pas = 0.001
                         neck.e_pas = -65
-                        neck.connect(sec(x))
+                        neck.connect(parent(x))
+
+                        # Register the spine in NetPyNE so plotShape can see it
+                        cell.secs[f'spine_neck_{spine_idx}'] = {
+                            'hObj': neck,
+                            'geom': {'L': 1.5, 'diam': 0.2},
+                            'topol': {'parentSec': secName, 'parentX': x, 'childX': 0.0},
+                            'mechs': {'pas': {'g': 0.001, 'e': -65}}
+                        }
+
                         spine_idx += 1
+
 
 if cfg.useExplicitSpines:
     add_spines_to_PT5B_cells()
