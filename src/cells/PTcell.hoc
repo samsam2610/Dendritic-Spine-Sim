@@ -3902,7 +3902,7 @@ proc celldef () { localobj sp
         continue  // skip sections with insufficient 3D geometry
       }
       arc_total = arc3d(npts-1)
-        for (x = 0.0; x < 1.0; x += 0.05) {
+        for (x = 0.0; x < 1.0; x += 0.2) {
             sp = new SpinyCell()
             connect sp.spine_neck(0), x
             spineList.append(sp)
