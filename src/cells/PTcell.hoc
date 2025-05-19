@@ -3903,7 +3903,7 @@ proc celldef () { localobj sp
       }
       arc_total = arc3d(npts-1)
         for (x = 0.0; x < 1.0; x += 0.01) {
-
+            printf("Creating spine at %s, x = %f", secname(), x)
             // Find closest 3D point on parent
             target_arc = x * arc_total
             min_dist = 1e9
