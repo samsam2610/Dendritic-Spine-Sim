@@ -55,6 +55,26 @@ else:
         else:
             print(f"❌ PT cell {idx}: No spines found in cell.secs")
 
+def add_spines_to_PT5B_cells():
+    from neuron import h
+    spine_idx = 0
+    for cell in sim.net.cells:
+        if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
+            for secName in cell.secs:
+                if 'apic' in secName or 'dend' in secName:  # only dendritic
+                    sec = cell.secs[secName]['hObj']
+                    for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
+                        neck = h.Section(name=f'spine_neck_{spine_idx}')
+                        neck.L = 1.5
+                        neck.diam = 0.2
+                        neck.insert('pas')
+                        neck.g_pas = 0.001
+                        neck.e_pas = -65
+                        neck.connect(sec(x))
+                        spine_idx += 1
+
+if cfg.useExplicitSpines:
+    add_spines_to_PT5B_cells()
 
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()
