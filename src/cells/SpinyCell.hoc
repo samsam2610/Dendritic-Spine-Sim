@@ -1,18 +1,15 @@
 begintemplate SpinyCell
 public spine_neck, spine_head
-objref rand  // just use one Random for all randomization
+objref rand
 create spine_neck, spine_head
 
 proc init() {
-    // Make sure random exists and is seeded
-    if (rand == 0) {
-        rand = new Random()
-        rand.uniform(0, 1)
-    }
+    rand = new Random()
+    rand.uniform(0, 1)
 
     // Randomize neck geometry
-    neck_L = 0.05 + 0.15 * rand.repick()   // 0.05–0.2 μm
-    neck_d = 0.15 + 0.1 * rand.repick()    // 0.15–0.25 μm
+    neck_L = 0.05 + 0.15 * rand.repick()
+    neck_d = 0.15 + 0.1 * rand.repick()
 
     spine_neck {
         nseg = 1
@@ -29,8 +26,8 @@ proc init() {
     }
 
     // Randomize head geometry
-    head_L = 0.4 + 0.3 * rand.repick()    // 0.4–0.7 μm
-    head_d = 0.35 + 0.3 * rand.repick()   // 0.35–0.65 μm
+    head_L = 0.4 + 0.3 * rand.repick()
+    head_d = 0.35 + 0.3 * rand.repick()
 
     spine_head {
         nseg = 1
@@ -52,7 +49,6 @@ proc init() {
 func get_g_pas() { local L, diam, g_pas_val
     L = $1
     diam = $2
-    // Example dependency
     L = L * 1e-4
     diam = diam * 1e-4
     g_pas_val = 0.0005 * (0.5 / (L * diam + 1e-9))
