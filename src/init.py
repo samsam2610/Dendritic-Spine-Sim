@@ -78,14 +78,13 @@ def interpolate_pt3d(sec, x):
             return x_val, y_val, z_val
     raise RuntimeError(f"Interpolation failed for section {sec.name()}, x={x}")
 
-from neuron import h
+
 def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
-    from neuron import h
     import math
 
     # Interpolate 3D coordinates
-    x0, y0, z0 = interpolate_pt3d(parent_sec, x)
+    x0, z0, y0 = interpolate_pt3d(parent_sec, x)
 
     # Estimate tangent vector by small step ahead
     dx = 0.01
