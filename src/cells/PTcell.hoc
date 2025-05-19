@@ -3881,13 +3881,13 @@ proc schedule_spine_plasticity() {
 }
 
 proc add_spines() {
+    strdef cmd, secName
     forsec spiny {
-        strdef secName
         secName = secname()  // get name of current section
         for (x, 0.1) {
             spineObj = new SpinyCell()
-            sprint(secName, "%s(%g)", secname(), x)
-            execute("connect spineObj.spine_neck(0), " + secName)
+            sprint(cmd, "connect spineObj.spine_neck(0), %s(%g)", secName, x)
+            execute(cmd)
             spineList.append(spineObj)
             spineHeads.append(spineObj.spine_head)
         }
