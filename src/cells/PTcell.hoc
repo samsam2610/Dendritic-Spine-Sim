@@ -3921,8 +3921,15 @@ proc celldef () {
     spineHeads = new List()
     explicitSpineSections = new SectionList()
     forsec spiny {
-        explicitSpineSections.append()
+      for (x, 0.1) {
+        objref spineObj
+        spineObj = new SpinyCell()
+        connect spineObj.spine_neck(0), x
+        spineList.append(spineObj)
+        spineHeads.append(spineObj.spine_head)
+      }
     }
+
     add_spines()  
     cvode = new CVode()
     cvode.event(0.1, "update_spine_plasticity()") // Update spine plasticity every 0.1 ms
