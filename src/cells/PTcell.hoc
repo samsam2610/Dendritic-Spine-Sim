@@ -3914,7 +3914,9 @@ proc mkstim () {
   }
 }
 
-proc celldef () { localobj sp
+proc celldef () { 
+  local x, sec
+  localobj sp
   topol()
   subsets()
   // geom_nseg()
