@@ -52,7 +52,7 @@ layer = {'2': [0.12,0.31], '4': [0.31,0.42], '5A': [0.42,0.52], '45A':[0.31,0.52
 #------------------------------------------------------------------------------
 ## Load cell rules previously saved using netpyne format
 cellParamLabels = ['IT5A_full', 'IT2_reduced', 'IT4_reduced', 'IT5A_reduced', 'IT5B_reduced',
-    'PT5B_reduced',  'IT6_reduced', 'CT6_reduced', 'PV_simple', 'SOM_simple']#, 'PT5B_full'] #  # list of cell rules to load from file
+    'PT5B_Full',  'IT6_reduced', 'CT6_reduced', 'PV_simple', 'SOM_simple']#, 'PT5B_reduced'] #  # list of cell rules to load from file
 loadCellParams = cellParamLabels
 saveCellParams = False
 
@@ -168,9 +168,6 @@ if 'PT5B_full' not in loadCellParams:
     if cfg.useExplicitSpines:
         from neuron import h
         set_spine_plasticity_params()
-        # for sec in h.allsec():
-        #     sec.push()
-        # h("add_spines()")  # Assumes this method exists in PTcell
         
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
     netParams.saveCellParamsRule(label='PT5B_full', fileName='cells/PT5B_full_cellParams.pkl')
