@@ -18,7 +18,7 @@ cfg = specs.SimConfig()
 #------------------------------------------------------------------------------
 # Run parameters
 #------------------------------------------------------------------------------
-cfg.duration = 2*1e3
+cfg.duration = 1*1e3
 cfg.dt = 0.05
 cfg.seeds = {'conn': 4321, 'stim': 1234, 'loc': 4321}
 cfg.hParams = {'celsius': 34, 'v_init': -80}
@@ -174,7 +174,7 @@ cfg.addSubConn = 1
 # Long range inputs
 #------------------------------------------------------------------------------
 cfg.addLongConn = 1
-cfg.numCellsLong = 200  # num of cells per population
+cfg.numCellsLong = 10  # num of cells per population
 cfg.noiseLong = 1.0  # firing rate random noise
 cfg.delayLong = 5.0  # (ms)
 cfg.weightLong = 0.5*2  # corresponds to unitary connection somatic EPSP (mV)
