@@ -1,13 +1,9 @@
 begintemplate SpinyCell
-    public parent, xloc, spine_neck, spine_head
-    objref parent, xloc
+    public spine_neck, spine_head
     create spine_neck, spine_head
 
     proc init() {
-        parent = $1
-        xloc = $2
-
-        // Configure spine neck (thin resistive bridge)
+        // Configure spine neck
         spine_neck {
             nseg = 1
             L = 0.05
@@ -22,7 +18,7 @@ begintemplate SpinyCell
             pt3dadd(0, L, 0, diam)
         }
 
-        // Configure spine head (integration compartment)
+        // Configure spine head
         spine_head {
             nseg = 1
             L = 0.5
@@ -37,9 +33,7 @@ begintemplate SpinyCell
             pt3dadd(0, L, 0, diam)
         }
 
-        // Connect geometry: neck to parent, head to neck
-        connect spine_neck(0), parent(xloc)
+        // Only connect spine_head to neck
         connect spine_head(0), spine_neck(1)
     }
-
 endtemplate SpinyCell
