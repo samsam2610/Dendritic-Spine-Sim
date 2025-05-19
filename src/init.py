@@ -41,22 +41,19 @@ if not hasattr(cfg, 'afterSim'):
 cfg.afterSim.append(apply_tdcs_field)
 
 sim.create(netParams, cfg)
-# 🔍 Check for spine initialization in PT cells
+# 🔍 Check for spine initialization in PT cells by inspecting cell.secs
 pt_cells = [cell for cell in sim.net.cells if cell.tags.get('cellType') == 'PT']
 if not pt_cells:
     print("⚠️  No PT cells found in network.")
 else:
     for idx, cell in enumerate(pt_cells):
-        hcell = cell.hObj         # the actual HOC template instance
-        try:
-            if hasattr(hcell, 'spineList'):
-                # spineList is a HOC List() so you can call .count()
-                n_spines = int(hcell.spineList.count())
-                print(f"✅ PT cell {idx}: {n_spines} spines initialized.")
-            else:
-                print(f"❌ PT cell {idx}: 'spineList' attribute not found on HOC instance.")
-        except Exception as e:
-            print(f"⚠️  PT cell {idx}: Error accessing spineList -> {e}")
+        # Count sections named 'spine_neck' (one per spine)
+        spine_neck_secs = [secName for secName in cell.secs if secName.startswith('spine_neck')]
+        n_spines = len(spine_neck_secs)
+        if n_spines > 0:
+            print(f"✅ PT cell {idx}: {n_spines} spines initialized ({len(spine_neck_secs)} neck sections).")
+        else:
+            print(f"❌ PT cell {idx}: No spines found in cell.secs")
 
 
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
