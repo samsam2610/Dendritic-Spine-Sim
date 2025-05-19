@@ -168,8 +168,32 @@ if 'PT5B_full' not in loadCellParams:
     if cfg.useExplicitSpines:
         from neuron import h
         set_spine_plasticity_params()
-        
-    netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
+        spine_idx = 0
+        for parent_sec in cellRule['secLists']['spiny']:
+            parent = cellRule['secs'][parent_sec]['hObj']
+            for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
+                # Create and connect spine neck
+                neck = h.Section(name=f'spine_neck_{spine_idx}')
+                neck.L = 1.5
+                neck.diam = 0.2
+                neck.insert('pas')
+                neck.g_pas = 0.001
+                neck.e_pas = -65
+                neck.connect(parent(x))
+
+                h.pt3dclear(sec=neck)
+                h.pt3dadd(0, 0, 0, 0.2, sec=neck)
+                h.pt3dadd(1.5, 0, 0, 0.2, sec=neck)
+
+                # Register spine neck in NetPyNE
+                cellRule['secs'][f'spine_neck_{spine_idx}'] = {
+                    'geom': {'L': 1.5, 'diam': 0.2, 'pt3d': [[0, 0, 0, 0.2], [1.5, 0, 0, 0.2]]},
+                    'topol': {'parentSec': parent_sec, 'parentX': x, 'childX': 0},
+                    'mechs': {'pas': {'g': 0.001, 'e': -65}},
+                    'hObj': neck
+                }
+
+                spine_idx += 1    netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
     netParams.saveCellParamsRule(label='PT5B_full', fileName='cells/PT5B_full_cellParams.pkl')
 
 
