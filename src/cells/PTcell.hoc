@@ -3871,7 +3871,7 @@ proc update_spine_plasticity() {
 
 proc schedule_spine_plasticity() {
     update_spine_plasticity()
-    cvode.event(t + 5, "cell.schedule_spine_plasticity()")  // every 5 ms
+    cvode.event(t + 5, "this.schedule_spine_plasticity()")  // every 5 ms
 }
 
 proc add_spines() {
