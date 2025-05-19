@@ -116,7 +116,7 @@ load_file("SpinyCell.hoc")
 
 begintemplate PTcell 
 objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
-objref spineList, spineHeads, spiny, spineObj
+objref spineList, spineHeads , spineObj
 objref stim, esyn, isyn,nil
 objref cvode
 public all,somatic,basal,apical,spiny,alldend
