@@ -1,41 +1,45 @@
 begintemplate SpinyCell
-public parent, xloc, spine_neck, spine_head
-objref parent, xloc
-proc init() {
-    parent = $1
-    xloc = $2
+    public parent, xloc, spine_neck, spine_head
+    objref parent, xloc
     create spine_neck, spine_head
 
-    // Spine Neck: thin, resistive bridge
-    spine_neck {
-        nseg = 1
-        L = 0.05     // μm
-        diam = 0.2   // μm
-        insert pas
-        cm = 1.0
-        Ra = 150
-        g_pas = 0.0005
-        e_pas = -65
-        pt3dclear()
-        pt3dadd(0, 0, 0, diam)
-        pt3dadd(0, L, 0, diam)
-    }
-    connect spine_neck(0), parent(xloc)
+    proc init() {
+        parent = $1
+        xloc = $2
 
-    // Spine Head: integrates local synaptic input
-    spine_head {
-        nseg = 1
-        L = 0.5      // μm
-        diam = 0.5   // μm
-        insert pas
-        cm = 1.0
-        Ra = 100
-        g_pas = 0.0005
-        e_pas = -65
-        pt3dclear()
-        pt3dadd(0, 0, 0, diam)
-        pt3dadd(0, L, 0, diam)
+        // Configure spine neck (thin resistive bridge)
+        spine_neck {
+            nseg = 1
+            L = 0.05
+            diam = 0.2
+            insert pas
+            cm = 1.0
+            Ra = 150
+            g_pas = 0.0005
+            e_pas = -65
+            pt3dclear()
+            pt3dadd(0, 0, 0, diam)
+            pt3dadd(0, L, 0, diam)
+        }
+
+        // Configure spine head (integration compartment)
+        spine_head {
+            nseg = 1
+            L = 0.5
+            diam = 0.5
+            insert pas
+            cm = 1.0
+            Ra = 100
+            g_pas = 0.0005
+            e_pas = -65
+            pt3dclear()
+            pt3dadd(0, 0, 0, diam)
+            pt3dadd(0, L, 0, diam)
+        }
+
+        // Connect geometry: neck to parent, head to neck
+        connect spine_neck(0), parent(xloc)
+        connect spine_head(0), spine_neck(1)
     }
-    connect spine_head(0), spine_neck(1)
-}
+
 endtemplate SpinyCell
