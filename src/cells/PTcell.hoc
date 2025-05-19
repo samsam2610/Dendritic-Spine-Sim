@@ -115,10 +115,10 @@ load_file("SpinyCell.hoc")
 
 
 begintemplate PTcell 
-objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
-objref spineList, spineHeads , spineObj
+objref all, somatic, axonal, basal, apical, alldend, apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom, spiny
+objref spineList, spineHeads, , spineObj
 objref stim, esyn, isyn,nil
-objref cvode
+objref cvode, spineCell
 public all,somatic,basal,apical,spiny,alldend
 public apical_maintrunk, apical_oblique, apical_uppertrunk, apical_tuft, apical_beforebranchpoint, apical_afterbranchpoint, perisom
 public spineList, spineHeads, spiny
@@ -3882,16 +3882,16 @@ proc schedule_spine_plasticity() {
   cvode.event(t + 0.1, "update_spine_plasticity()")
 }
 
-proc add_spines() {
+proc add_spines() { localobj spineCell
     forsec spiny {
         // Inside a forsec loop, the current section is available implicitly
         for (x, 0.1) {  // every 10% of the section
-            spineObj = new SpinyCell()
+            spineCell = new SpinyCell()
             // Connect the spine's neck to the current section at location x
-            connect spineObj.spine_neck(0), x  
+            connect spineCell.spine_neck(0), x  
             // Store references to the full spine and its head
-            spineList.append(spineObj)
-            spineHeads.append(spineObj.spine_head)
+            spineList.append(spineCell)
+            spineHeads.append(spineCell.spine_head)
         }
     }
 }
