@@ -47,15 +47,17 @@ pt_cells = [cell for cell in sim.net.cells if cell.tags.get('cellType') == 'PT']
 if not pt_cells:
     print("⚠️  No PT cells found in network.")
 else:
-    for i, cell in enumerate(pt_cells):
+    for idx, cell in enumerate(pt_cells):
+        hcell = cell.hObj         # the actual HOC template instance
         try:
-            if hasattr(h.cell, 'spineList'):
-                n_spines = int(h.cell.spineList.count())
-                print(f"✅ PT cell {i}: {n_spines} spines initialized.")
+            if hasattr(hcell, 'spineList'):
+                # spineList is a HOC List() so you can call .count()
+                n_spines = int(hcell.spineList.count())
+                print(f"✅ PT cell {idx}: {n_spines} spines initialized.")
             else:
-                print(f"❌ PT cell {i}: Spines not initialized.")
+                print(f"❌ PT cell {idx}: 'spineList' attribute not found on HOC instance.")
         except Exception as e:
-            print(f"⚠️  PT cell {i}: Error checking spines -> {e}")
+            print(f"⚠️  PT cell {idx}: Error accessing spineList -> {e}")
 
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()
