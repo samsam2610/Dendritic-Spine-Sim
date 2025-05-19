@@ -86,8 +86,10 @@ def interpolate_pt3d(sec, x_norm):
 from neuron import h
 import math
 
-def add_spine_at(parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
+def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
+    from neuron import h
+    import math
 
     # Interpolate 3D coordinates
     x0, y0, z0 = interpolate_pt3d(parent_sec, x)
@@ -111,14 +113,27 @@ def add_spine_at(parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     neck.insert("pas")
     neck.g_pas = 0.001
     neck.e_pas = -65
-    neck.connect(parent_sec(x))
+    neck.connect(parent_sec(x), 0.0)
 
     # Place 3D points along the normal direction
     h.pt3dclear(sec=neck)
     h.pt3dadd(x0, y0, z0, 0.2, sec=neck)
     h.pt3dadd(x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, 0.2, sec=neck)
 
+    # Register in cell.secs so NetPyNE can visualize
+    cell.secs[f'spine_neck_{spine_idx}'] = {
+        'hObj': neck,
+        'geom': {'L': neck.L, 'diam': neck.diam},
+        'topol': {'parentSec': parent_sec.name(), 'parentX': x, 'childX': 0.0},
+        'mechs': {'pas': {'g': 0.001, 'e': -65}},
+        'pt3d': [
+            [x0, y0, z0, neck.diam],
+            [x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, neck.diam]
+        ]
+    }
+
     return neck
+
 
 
 def add_spines_to_PT5B_cells():
@@ -130,7 +145,7 @@ def add_spines_to_PT5B_cells():
                 if 'apic' in secName or 'dend' in secName:
                     parent = cell.secs[secName]['hObj']
                     for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
-                        neck = add_spine_at(parent, x, spine_idx)
+                        add_spine_at(cell, parent, x, spine_idx)
                         spine_idx += 1
 
 
