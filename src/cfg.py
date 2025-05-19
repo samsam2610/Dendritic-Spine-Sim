@@ -78,7 +78,7 @@ cfg.analysis['plotSpikeHist'] = {'include': ['IT2','IT4','IT5A','IT5B','PT5B','I
 
 cfg.analysis['plotConn'] = {'includePre': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'includePost': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'feature': 'strength', 'figSize': (10,10), 'groupBy': 'pop', \
  						'graphType': 'matrix', 'synOrConn': 'conn', 'synMech': None, 'saveData': None, 'saveFig': 1, 'showFig': 0}
-cfg.analysis['plotShape'] = {'includePre': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'includePost': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'figSize': (10, 10), 'dpi': 600, 'saveFig': True}
+cfg.analysis['plotShape'] = {'includePre': ['PT5B'], 'includePost': ['PT5B'], 'figSize': (10, 10), 'dpi': 600, 'saveFig': True}
 
 #------------------------------------------------------------------------------
 # Cells
