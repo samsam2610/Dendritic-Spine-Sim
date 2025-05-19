@@ -168,9 +168,9 @@ if 'PT5B_full' not in loadCellParams:
     if cfg.useExplicitSpines:
         from neuron import h
         set_spine_plasticity_params()
-        for sec in h.allsec():
-            sec.push()
-        h("add_spines()")  # Assumes this method exists in PTcell
+        # for sec in h.allsec():
+        #     sec.push()
+        # h("add_spines()")  # Assumes this method exists in PTcell
         
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
     netParams.saveCellParamsRule(label='PT5B_full', fileName='cells/PT5B_full_cellParams.pkl')
