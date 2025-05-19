@@ -109,8 +109,8 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
 
     # Place 3D points along the normal direction
     h.pt3dclear(sec=neck)
-    h.pt3dadd(x0, y0, z0, 0.2, sec=neck)
-    h.pt3dadd(x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, 0.2, sec=neck)
+    h.pt3dadd(z0, y0, x0, 0.2, sec=neck)
+    h.pt3dadd(z0 + nz * offset, y0 + ny * offset, x0 + nx * offset, 0.2, sec=neck)
 
     # Register in cell.secs so NetPyNE can visualize
     cell.secs[f'spine_neck_{spine_idx}'] = {
