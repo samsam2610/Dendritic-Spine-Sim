@@ -6,12 +6,12 @@ begintemplate SpinyCell
         // Configure spine neck
         spine_neck {
             nseg = 1
-            L = 0.05
-            diam = 0.2
+            L = 0.05  // μm
+            diam = 0.2  // μm
             insert pas
             cm = 1.0
             Ra = 150
-            g_pas = 0.0005
+            g_pas = get_g_pas(L, diam)
             e_pas = -65
             pt3dclear()
             pt3dadd(0, 0, 0, diam)
@@ -21,12 +21,12 @@ begintemplate SpinyCell
         // Configure spine head
         spine_head {
             nseg = 1
-            L = 0.5
-            diam = 0.5
+            L = 0.5  // μm
+            diam = 0.5  // μm
             insert pas
             cm = 1.0
             Ra = 100
-            g_pas = 0.0005
+            g_pas = get_g_pas(L, diam)
             e_pas = -65
             pt3dclear()
             pt3dadd(0, 0, 0, diam)
@@ -35,5 +35,18 @@ begintemplate SpinyCell
 
         // Only connect spine_head to neck
         connect spine_head(0), spine_neck(1)
+    }
+
+    // Function to calculate g_pas as a function of geometry
+    func get_g_pas() { local L, diam, g_pas_val
+        L = $1  // μm
+        diam = $2  // μm
+        // Example: decrease g_pas for longer/thinner compartments
+        // (scale constants as needed for your biophysics)
+        // Convert μm to cm: 1 μm = 1e-4 cm
+        L = L * 1e-4
+        diam = diam * 1e-4
+        g_pas_val = 0.0005 * (0.5 / (L * diam + 1e-9))  // Example: inversely scale with surface area
+        return g_pas_val
     }
 endtemplate SpinyCell
