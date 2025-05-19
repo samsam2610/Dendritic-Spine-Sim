@@ -87,7 +87,7 @@ def interpolate_pt3d(sec, x_norm):
 def add_spines_to_PT5B_cells():
     spine_idx = 0
     offset_distance = 0.5  # microns; radial offset from dendrite
-
+    import math
     for cell in sim.net.cells:
         if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
             for secName in list(cell.secs.keys()):
