@@ -74,10 +74,11 @@ cfg.analysis['plotRaster'] = {'include': allpops, 'saveFig': True, 'showFig': Fa
 							'timeRange': [0,500], 'popColors': popColors, 'figSize': (6,6), 'lw': 0.3, 'markerSize':10, 'marker': '.', 'dpi': 300}
 
 cfg.analysis['plotSpikeHist'] = {'include': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'timeRange': [0,500],
-								'saveFig': True, 'showFig': False, 'popColors': popColors, 'figSize': (10,4), 'dpi': 300}
+								'saveFig': True, 'showFig': False, 'popColors': popColors, 'figSize': (10,10), 'dpi': 300}
 
 cfg.analysis['plotConn'] = {'includePre': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'includePost': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'feature': 'strength', 'figSize': (10,10), 'groupBy': 'pop', \
  						'graphType': 'matrix', 'synOrConn': 'conn', 'synMech': None, 'saveData': None, 'saveFig': 1, 'showFig': 0}
+cfg.analysis['plotShape'] = {'includePre': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'includePost': ['IT2','IT4','IT5A','IT5B','PT5B','IT6','CT6'], 'figSize': (10, 10), 'dpi': 600, 'saveFig': True}
 
 #------------------------------------------------------------------------------
 # Cells
