@@ -52,7 +52,7 @@ layer = {'2': [0.12,0.31], '4': [0.31,0.42], '5A': [0.42,0.52], '45A':[0.31,0.52
 #------------------------------------------------------------------------------
 ## Load cell rules previously saved using netpyne format
 cellParamLabels = ['IT5A_full', 'IT2_reduced', 'IT4_reduced', 'IT5A_reduced', 'IT5B_reduced',
-    'PT5B_full',  'IT6_reduced', 'CT6_reduced', 'PV_simple', 'SOM_simple']#, 'PT5B_reduced'] #  # list of cell rules to load from file
+    'PT5B_reduced',  'IT6_reduced', 'CT6_reduced', 'PV_simple', 'SOM_simple']#, 'PT5B_full'] #  # list of cell rules to load from file
 loadCellParams = cellParamLabels
 saveCellParams = False
 

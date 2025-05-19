@@ -18,14 +18,14 @@ cfg = specs.SimConfig()
 #------------------------------------------------------------------------------
 # Run parameters
 #------------------------------------------------------------------------------
-cfg.duration = 0.5*1e3
+cfg.duration = 10*1e3
 cfg.dt = 0.05
 cfg.seeds = {'conn': 4321, 'stim': 1234, 'loc': 4321}
 cfg.hParams = {'celsius': 34, 'v_init': -80}
 cfg.coreneuron = False # run via coreneuron (alpha support)
 cfg.gpu = False # needs coreneuron enabled
 cfg.random123 = False # enable random123 for coreneuron compatibility
-cfg.verbose = 0
+cfg.verbose = 1
 cfg.createNEURONObj = True
 cfg.createPyStruct = True
 cfg.cvode_active = False
@@ -37,6 +37,8 @@ cfg.includeParamsLabel = False
 cfg.printPopAvgRates = True
 
 cfg.checkErrors = False
+cfg.saveInterval = 100 # define how often the data is saved, this can be used with interval run if you want to update the weights more often than you save
+cfg.intervalFolder = 'interval_saving'
 
 #------------------------------------------------------------------------------
 # Recording
@@ -171,7 +173,7 @@ cfg.addSubConn = 1
 # Long range inputs
 #------------------------------------------------------------------------------
 cfg.addLongConn = 1
-cfg.numCellsLong = 10  # num of cells per population
+cfg.numCellsLong = 200  # num of cells per population
 cfg.noiseLong = 1.0  # firing rate random noise
 cfg.delayLong = 5.0  # (ms)
 cfg.weightLong = 0.5*2  # corresponds to unitary connection somatic EPSP (mV)
@@ -179,7 +181,7 @@ cfg.startLong = 0  # start at 0 ms
 cfg.ratesLong = {'TPO': [0,20], 'TVL': [0,20], 'S1': [0,20], 'S2': [0,20], 'cM1': [0,20], 'M2': [0,20], 'OC': [0,20]}
 
 ## input pulses
-cfg.addPulses = 0
+cfg.addPulses = 1
 cfg.pulse = {'pop': 'None', 'start': 1000, 'end': 1200, 'rate': 20, 'noise': 0.5}
 #cfg.pulse2 = {'pop': 'None', 'start': 1000, 'end': 1200, 'rate': 20, 'noise': 0.5}
 
