@@ -3917,13 +3917,6 @@ proc celldef () { localobj sp
             x0 = x3d(best_i)
             y0 = y3d(best_i)
             z0 = z3d(best_i)
-
-            // Assign the spine 3D shape (sticks out in Y)
-            offset = 1   // microns
-            access sp.spine_neck
-            pt3dclear()
-            pt3dadd(x0, y0, z0, sp.spine_neck.diam)
-            pt3dadd(x0, y0 + offset, z0, sp.spine_neck.diam)
         }
     }
 
