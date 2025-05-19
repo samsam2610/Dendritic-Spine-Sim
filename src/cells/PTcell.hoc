@@ -3913,6 +3913,7 @@ proc mkstim () {
 }
 
 proc celldef () {
+  localobj sp
   topol()
   subsets()
   // geom_nseg()
@@ -3923,7 +3924,6 @@ proc celldef () {
     // Loop over every dendritic section (basal + apical)
     forsec alldend {
       for (x, 0.1) {          // every 10% of the section
-        localobj sp
         sp = new SpinyCell()                        // instantiate a spine
         connect sp.spine_neck(0), x                 // hang its neck at position x
         spineList.append(sp)                        // track the entire spine
