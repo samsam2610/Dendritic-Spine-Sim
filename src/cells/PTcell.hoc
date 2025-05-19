@@ -3947,7 +3947,7 @@ proc init () {local b,i,ihMod
     spineHeads = new List()
 
     add_spines()  // <<< ✅ This will use spineList and spineHeads
-    // cvode.event(0.1, "update_spine_plasticity()") // Update spine plasticity every 0.1 ms
+    cvode.event(0.1, "update_spine_plasticity()") // Update spine plasticity every 0.1 ms
   }
 
 
