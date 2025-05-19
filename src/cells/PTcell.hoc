@@ -3920,8 +3920,8 @@ proc celldef () {
     spineList = new List()
     spineHeads = new List()
     explicitSpineSections = new SectionList()
-    for i=0, spiny.count()-1 {
-      explicitSpineSections.append( spiny.o(i) )
+    forsec spiny {
+        explicitSpineSections.append()
     }
     add_spines()  
     cvode = new CVode()
