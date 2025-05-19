@@ -3924,9 +3924,16 @@ proc celldef () { localobj sp
     forsec alldend {
       for (x, 0.1) {          // every 10% of the section
         // Debug prints
-        print ">>> DEBUG: does spineList exist? ", exists("spineList")
-        print ">>> DEBUG: is spineList an objref? ", isobjref(spineList)
-        print ">>> DEBUG: spineList value/address: ", spineList
+        // ————————— Debug block —————————
+        print ">>> DEBUG: spineList pointer =", spineList
+        print ">>> DEBUG: isobjref(spineList) =", isobjref(spineList)
+        if (spineList == nil) {
+          print ">>> DEBUG: spineList is nil (never new'd or objref missing)"
+        } else {
+          print ">>> DEBUG: spineList OK"
+        }
+        // —————————————————————————————————————
+
 
         sp = new SpinyCell()                        // instantiate a spine
         connect sp.spine_neck(0), x                 // hang its neck at position x
