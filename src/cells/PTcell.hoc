@@ -125,6 +125,7 @@ external nax_gbar,nax_gbar_axonm,kdr_gbar,kdr_gbar_axonm, nax_gbar_somam, nax_gb
 external cal_gcalbar, can_gcanbar, kBK_gpeak, kBK_caVhminShift, cadad_depth, cadad_taur // cat_gcatbar
 external kap_gbar,kap_gbar_axonm,p_ek,p_ena
 external kdmc_gbar,kdmc_gbar_axonm, calginc, canginc, useharnett, usekole, usemigliore, usecahotzone
+external useExplicitSpines, spinePlasticityVThreshold, spineNeckGrowStep, spineNeckShrinkStep, spineNeckMinL, spineNeckMaxL
 double h_lambda[1],nexusdist[1],h_gbar_tuftm[1]
 public h_lambda,nexusdist,h_gbar_tuftm
 external kdr_vhalfn, kdr_a0n, kdr_nmax
