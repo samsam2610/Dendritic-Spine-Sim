@@ -58,16 +58,30 @@ else:
 from neuron import h
 from math import cos, sin, pi
 
-def get_xyz_at_x(sec, x):
-    """
-    Return (x, y, z) position at a given normalized location `x` along `sec`
-    """
-    from neuron import h
-    x_val = h.ref(0.0)
-    y_val = h.ref(0.0)
-    z_val = h.ref(0.0)
-    h.loc3d(x, x_val, y_val, z_val, sec=sec)
-    return x_val[0], y_val[0], z_val[0]
+def interpolate_pt3d(sec, x_norm):
+    """Return interpolated (x, y, z) position at normalized location x in sec"""
+    n3d = int(h.n3d(sec=sec))
+    if n3d < 2:
+        raise ValueError("Section has fewer than 2 pt3d points")
+
+    arc_len_total = h.arc3d(n3d-1, sec=sec)
+    target_arc = x_norm * arc_len_total
+
+    for i in range(1, n3d):
+        arc_i = h.arc3d(i, sec=sec)
+        arc_prev = h.arc3d(i-1, sec=sec)
+        if arc_i >= target_arc:
+            # Interpolate between pt3d(i-1) and pt3d(i)
+            frac = (target_arc - arc_prev) / (arc_i - arc_prev + 1e-12)
+            x0, y0, z0 = h.x3d(i-1, sec=sec), h.y3d(i-1, sec=sec), h.z3d(i-1, sec=sec)
+            x1, y1, z1 = h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec)
+            x3d = x0 + frac * (x1 - x0)
+            y3d = y0 + frac * (y1 - y0)
+            z3d = z0 + frac * (z1 - z0)
+            return x3d, y3d, z3d
+
+    # Fallback if loop fails
+    return h.x3d(n3d-1, sec=sec), h.y3d(n3d-1, sec=sec), h.z3d(n3d-1, sec=sec)
 
 
 def add_spines_to_PT5B_cells():
@@ -81,7 +95,7 @@ def add_spines_to_PT5B_cells():
                     parent = cell.secs[secName]['hObj']
                     for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
                         # Get 3D coordinates at position x along the dendrite
-                        x3d, y3d, z3d = get_xyz_at_x(parent, x)
+                        x3d, y3d, z3d = interpolate_pt3d(parent, x)
 
                         # Offset vector (you can randomize angle if you want)
                         angle = 2 * math.pi * (spine_idx % 10) / 10  # simple rotation
