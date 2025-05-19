@@ -29,7 +29,7 @@ cfg.verbose = 1
 cfg.createNEURONObj = True
 cfg.createPyStruct = True
 cfg.cvode_active = True
-cfg.cvode_atol = 1e-6
+cfg.cvode_atol = 1e-3
 cfg.cache_efficient = True
 cfg.printRunTime = 0.1
 
