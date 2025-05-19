@@ -3930,7 +3930,7 @@ proc celldef () { localobj sp
         print "Adding spine at section ", secname(), " at x=", x
 
         // pass the section pointer ($sec) and x location into the template
-        sp = new SpinyCell($sec, x)
+        sp = new SpinyCell(sec, x)
 
         // the template’s init() already did:
         //   create spine_neck, spine_head
