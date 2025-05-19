@@ -3922,6 +3922,7 @@ proc celldef () { localobj sp
             y0 = y3d(best_i)
             z0 = z3d(best_i)
             offset = 0.5 // offset for the spine head
+            print "Creating spine at section %s, x = %.2f, y = %.2f, z = %.2f\\n", secname(), x0, y0, z0
             access sp.spine_neck
             pt3dclear()
             pt3dadd(x0, y0, z0, 0.2)
