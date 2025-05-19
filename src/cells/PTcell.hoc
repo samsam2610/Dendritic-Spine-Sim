@@ -3887,8 +3887,8 @@ proc mkstim () {
   }
 }
 
-proc celldef() { local x, i, npts, best_i, min_dist, dist, arc, arc_total, target_arc, x0, y0, z0, offset
-    objref sp, spineList
+proc celldef() { local x, i, npts, best_i, min_dist, dist, arc, arc_total, target_arc, x0, y0, z0, offset, sp
+    
 
     topol()
     subsets()
