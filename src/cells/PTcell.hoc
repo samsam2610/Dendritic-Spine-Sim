@@ -3914,8 +3914,7 @@ proc mkstim () {
   }
 }
 
-proc celldef () { 
-  localobj sp
+proc celldef () { localobj sp
   local x, sec
   topol()
   subsets()
