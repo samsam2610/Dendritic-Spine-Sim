@@ -3888,10 +3888,10 @@ proc add_spines() { localobj spineCell
         for (x, 0.1) {  // every 10% of the section
             spineCell = new SpinyCell()
             // Connect the spine's neck to the current section at location x
-            // connect spineCell.spine_neck(0), x  
+            connect spineCell.spine_neck(0), x  
             // Store references to the full spine and its head
-            // spineList.append(spineCell)
-            // spineHeads.append(spineCell.spine_head)
+            spineList.append(spineCell)
+            spineHeads.append(spineCell.spine_head)
         }
     }
 }
@@ -3926,9 +3926,14 @@ proc celldef () { localobj sp
 
         sp = new SpinyCell()                        // instantiate a spine
         connect sp.spine_neck(0), x  
-               // hang its neck at position x
-        spineList.append(sp)                        // track the entire spine
-        spineHeads.append(sp.spine_head)            // track just the head
+        // Debug prints
+        // ————————— Debug block —————————
+        print ">>> DEBUG: spineList pointer =", spineList
+        // —————————————————————————————————————
+
+        //        // hang its neck at position x
+        // spineList.append(sp)                        // track the entire spine
+        // spineHeads.append(sp.spine_head)            // track just the head
       }
     }
 
