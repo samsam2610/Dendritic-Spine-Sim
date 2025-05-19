@@ -6,7 +6,8 @@ Simulation configuration for M1 model (using NetPyNE)
 
 from netpyne import specs
 import pickle
-
+import os
+from datetime import datetime
 cfg = specs.SimConfig()
 
 #------------------------------------------------------------------------------
@@ -55,7 +56,17 @@ cfg.recordStep = 0.1
 # Saving
 #------------------------------------------------------------------------------
 cfg.simLabel = 'DendriticSpinySim'
-cfg.saveFolder = '.'
+base_folder = '.'  # or another path if you want
+
+# Generate a folder name like: ./DendriticSpinySim_2024-05-19_15-30-02
+dt_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+save_folder = os.path.join(base_folder, f"{cfg.simLabel}_{dt_str}")
+
+# Create the directory if it doesn't exist
+os.makedirs(save_folder, exist_ok=True)
+
+# Assign to cfg.saveFolder so NetPyNE saves there
+cfg.saveFolder = save_folder
 cfg.savePickle = False
 cfg.saveJson = True
 cfg.saveDataInclude = ['simData', 'simConfig', 'netParams', 'net']
