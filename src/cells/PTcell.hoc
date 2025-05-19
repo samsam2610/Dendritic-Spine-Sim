@@ -3850,7 +3850,7 @@ proc sethgbar () { local xd
 // Update Spine plasticity
 proc update_spine_plasticity() {
     for i = 0, spineList.count() - 1 {
-        objref s
+        if (!isassigned(s)) objref s
         s = spineList.o(i)
 
         // Basic voltage-based rule (e.g., LTP = elongate)
@@ -3874,7 +3874,7 @@ proc schedule_spine_plasticity() {
 proc add_spines() {
     forsec spiny {
         for (x, 0.1) {  // every 10% of the section
-            objref s
+            if (!isassigned(s)) objref s
             s = new SpinyCell()
 
             // Connect the spine's neck to the dendritic section at location x
