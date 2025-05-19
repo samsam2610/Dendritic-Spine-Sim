@@ -5,7 +5,7 @@ create spine_neck, spine_head
 proc init() {
     // Spine Neck: thin, resistive bridge to parent dendrite
     spine_neck {
-        L = 1.5      // μm
+        L = 0.05     // μm
         diam = 0.2   // μm
         insert pas
         cm = 1.0
