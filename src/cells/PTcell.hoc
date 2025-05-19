@@ -3925,14 +3925,8 @@ proc celldef () { localobj sp
       for (x, 0.1) {          // every 10% of the section
 
         sp = new SpinyCell()                        // instantiate a spine
-        connect sp.spine_neck(0), x  
-        // Debug prints
-        // ————————— Debug block —————————
-        print ">>> DEBUG: spineList pointer =", spineList
-        // —————————————————————————————————————
-
-        //        // hang its neck at position x
-        // spineList.append(sp)                        // track the entire spine
+        connect sp.spine_neck(0), x 
+        spineList.append(sp)                        // track the entire spine
         // spineHeads.append(sp.spine_head)            // track just the head
       }
     }
