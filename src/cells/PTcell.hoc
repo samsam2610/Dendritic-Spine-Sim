@@ -111,7 +111,7 @@ usecahotzone = 1 // whether to include ca 'hot zone' - if so, uses canginc,calgi
 // the apical dend cal,can conductances that are between nexus (~300 micron from soma)
 // and before tuft (around 600 micron from soma)
 // xopen("SpinyCell.hoc")
-load_file("SpinyCell.hoc") // put this at the top of PTcell.hoc or your main hoc file
+load_file("SpinyCell.hoc") 
 
 
 begintemplate PTcell 
