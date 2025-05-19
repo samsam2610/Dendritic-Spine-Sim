@@ -179,7 +179,7 @@ if 'PT5B_full' not in loadCellParams:
                 neck.insert('pas')
                 neck.g_pas = 0.001
                 neck.e_pas = -65
-                neck.connect(parent(x))
+                neck.connect(parent, x, 0.0)
 
                 h.pt3dclear(sec=neck)
                 h.pt3dadd(0, 0, 0, 0.2, sec=neck)
