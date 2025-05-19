@@ -3882,12 +3882,12 @@ proc schedule_spine_plasticity() {
 
 proc add_spines() {
     forsec spiny {
-        // Inside a forsec loop, the current section is available implicitly
-        for (x, 0.1) {  // every 10% of the section
+        strdef secName
+        secName = secname()  // get name of current section
+        for (x, 0.1) {
             spineObj = new SpinyCell()
-            // Connect the spine's neck to the current section at location x
-            connect spineObj.spine_neck(0), sec(x)  
-            // Store references to the full spine and its head
+            sprint(secName, "%s(%g)", secname(), x)
+            execute("connect spineObj.spine_neck(0), " + secName)
             spineList.append(spineObj)
             spineHeads.append(spineObj.spine_head)
         }
