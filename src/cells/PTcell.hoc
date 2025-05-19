@@ -3921,6 +3921,11 @@ proc celldef () { localobj sp
             x0 = x3d(best_i)
             y0 = y3d(best_i)
             z0 = z3d(best_i)
+            // Confirm best_i in range:
+            if (best_i < 0 || best_i >= npts) {
+              printf("Warning: bad index %d for section %s (npts=%d)\\n", best_i, secname(), npts)
+              continue
+            }
             offset = 0.5 // offset for the spine head
             print "Creating spine at section %s, x = %.2f, y = %.2f, z = %.2f\\n", secname(), x0, y0, z0
             access sp.spine_neck
