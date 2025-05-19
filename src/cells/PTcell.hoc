@@ -3919,16 +3919,18 @@ proc celldef () {
   if (useExplicitSpines) {
     spineList = new List()
     spineHeads = new List()
-    explicitSpineSections = new SectionList()
-    forsec spiny {
-      for (x, 0.1) {
-        objref spineObj
-        spineObj = new SpinyCell()
-        connect spineObj.spine_neck(0), x
-        spineList.append(spineObj)
-        spineHeads.append(spineObj.spine_head)
+    
+    // Loop over every dendritic section (basal + apical)
+    forsec alldend {
+      for (x, 0.1) {          // every 10% of the section
+        objref sp
+        sp = new SpinyCell()                        // instantiate a spine
+        connect sp.spine_neck(0), x                 // hang its neck at position x
+        spineList.append(sp)                        // track the entire spine
+        spineHeads.append(sp.spine_head)            // track just the head
       }
     }
+
 
     add_spines()  
     cvode = new CVode()
