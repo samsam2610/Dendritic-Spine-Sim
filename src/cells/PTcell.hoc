@@ -74,11 +74,15 @@ kBK_caVhminShift = 46.9679440782 // shift upwards to get lower effect on subthre
 cadad_depth = 0.102468419281 // original 1; reduced for tighter coupling of ica and cai
 cadad_taur = 16.0181691392 
 
-// Spine parameters
+// Plasticity parameters (can be set from Python before loading)
 spinePlasticityVThreshold = -40
 spineNeckGrowStep = 0.05
 spineNeckShrinkStep = 0.01
+spineNeckMinL = 0.3
+spineNeckMaxL = 5.0
 
+// Control flag for enabling explicit spines
+useExplicitSpines = 0
 
 /* *********************************************************** */
 
@@ -3869,11 +3873,6 @@ proc update_spine_plasticity() {
     }
 }
 
-proc schedule_spine_plasticity() {
-    update_spine_plasticity()
-    cvode.event(t + 5, "this.schedule_spine_plasticity()")  // every 5 ms
-}
-
 proc add_spines() {
     forsec spiny {
         for (x, 0.1) {  // every 10% of the section
@@ -3940,10 +3939,15 @@ proc init () {local b,i,ihMod
   celldef()
   access soma
   distance()
-  spineList = new List()
-  spineHeads = new List()
 
-  add_spines()  // <<< ✅ This will use spineList
+  if (useExplicitSpines) {
+    spineList = new List()
+    spineHeads = new List()
+
+    add_spines()  // <<< ✅ This will use spineList and spineHeads
+    cvode.event(0.1, "update_spine_plasticity()")
+  }
+
 
   init_once()
   setsyns()
