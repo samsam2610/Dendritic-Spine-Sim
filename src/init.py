@@ -143,28 +143,29 @@ def add_spines_to_PT5B_cells():
                         spine_idx += 1
 
 
+def get_3d_path(sec):
+        return [(h.x3d(i), h.y3d(i), h.z3d(i)) for i in range(int(h.n3d()))]
 
 if cfg.useExplicitSpines:
     add_spines_to_PT5B_cells()
 
-for cell in sim.net.cells:
-    if cell.tags.get('cellType') == 'PT':
-        for secName, sec in cell.secs.items():
-            if secName.startswith('spine_neck'):
-                topol = sec.get('topol', {})
-                parent_name = topol.get('parentSec', 'unknown')
-                parent_x = topol.get('parentX', 'unknown')
-                print(f"{secName} connected to: {parent_name} at x={parent_x}")
+    for cell in sim.net.cells:
+        if cell.tags.get('cellType') == 'PT':
+            for secName, sec in cell.secs.items():
+                if secName.startswith('spine_neck'):
+                    topol = sec.get('topol', {})
+                    parent_name = topol.get('parentSec', 'unknown')
+                    parent_x = topol.get('parentX', 'unknown')
+                    print(f"{secName} connected to: {parent_name} at x={parent_x}")
 
-def get_3d_path(sec):
-    return [(h.x3d(i), h.y3d(i), h.z3d(i)) for i in range(int(h.n3d()))]
+    
 
-for cell in sim.net.cells:
-    if cell.tags.get('cellType') == 'PT':
-        for secName in cell.secs:
-            if secName.startswith('spine_neck'):
-                pt3d = get_3d_path(cell.secs[secName]['hObj'])
-                print(f"{secName} 3D path: {pt3d}")
+    for cell in sim.net.cells:
+        if cell.tags.get('cellType') == 'PT':
+            for secName in cell.secs:
+                if secName.startswith('spine_neck'):
+                    pt3d = get_3d_path(cell.secs[secName]['hObj'])
+                    print(f"{secName} 3D path: {pt3d}")
 
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()

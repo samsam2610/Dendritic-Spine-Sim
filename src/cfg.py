@@ -226,7 +226,7 @@ cfg.NetStim1 = {'pop': 'IT2', 'ynorm':[0,1], 'sec': 'soma', 'loc': 0.5, 'synMech
 #------------------------------------------------------------------------------
 
 # Whether to explicitly attach SpinyCell compartments to dendrites
-cfg.useExplicitSpines = True
+cfg.useExplicitSpines = False
 
 # Control dynamic plasticity of spine necks
 cfg.useSpinePlasticity = True
