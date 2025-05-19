@@ -3929,12 +3929,6 @@ proc celldef () { localobj sp
         // Debug prints
         // ————————— Debug block —————————
         print ">>> DEBUG: spineList pointer =", spineList
-        print ">>> DEBUG: isobjref(spineList) =", isobjref(spineList)
-        if (spineList == nil) {
-          print ">>> DEBUG: spineList is nil (never new'd or objref missing)"
-        } else {
-          print ">>> DEBUG: spineList OK"
-        }
         // —————————————————————————————————————
 
                // hang its neck at position x
