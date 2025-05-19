@@ -55,15 +55,29 @@ else:
         else:
             print(f"❌ PT cell {idx}: No spines found in cell.secs")
 
+from neuron import h
+import math
+
 def add_spines_to_PT5B_cells():
-    from neuron import h
     spine_idx = 0
+    offset_distance = 0.5  # microns; radial offset from dendrite
+
     for cell in sim.net.cells:
         if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
-            for secName in list(cell.secs.keys()):  # ← Fix here
+            for secName in list(cell.secs.keys()):
                 if 'apic' in secName or 'dend' in secName:
                     parent = cell.secs[secName]['hObj']
                     for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
+                        # Get 3D coordinates at position x along the dendrite
+                        x3d, y3d, z3d = parent.x3d(x), parent.y3d(x), parent.z3d(x)
+
+                        # Offset vector (you can randomize angle if you want)
+                        angle = 2 * math.pi * (spine_idx % 10) / 10  # simple rotation
+                        dx = offset_distance * math.cos(angle)
+                        dy = offset_distance * math.sin(angle)
+                        dz = 0
+
+                        # Create and connect the spine neck
                         neck = h.Section(name=f'spine_neck_{spine_idx}')
                         neck.L = 1.5
                         neck.diam = 0.2
@@ -72,12 +86,16 @@ def add_spines_to_PT5B_cells():
                         neck.e_pas = -65
                         neck.connect(parent(x))
 
-                        # Register for NetPyNE + plotShape
+                        h.pt3dclear(sec=neck)
+                        h.pt3dadd(x3d, y3d, z3d, neck.diam, sec=neck)
+                        h.pt3dadd(x3d + dx, y3d + dy, z3d + dz, neck.diam, sec=neck)
+
+                        # Register with NetPyNE so it shows in plotShape
                         cell.secs[f'spine_neck_{spine_idx}'] = {
                             'hObj': neck,
-                            'geom': {'L': 1.5, 'diam': 0.2},
+                            'geom': {'L': neck.L, 'diam': neck.diam},
                             'topol': {'parentSec': secName, 'parentX': x, 'childX': 0.0},
-                            'mechs': {'pas': {'g': 0.001, 'e': -65}}
+                            'mechs': {'pas': {'g': 0.001, 'e': -65}},
                         }
 
                         spine_idx += 1
