@@ -84,7 +84,7 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
     import math
 
     # Interpolate 3D coordinates
-    x0, z0, y0 = interpolate_pt3d(parent_sec, x)
+    x0, y0, z0 = interpolate_pt3d(parent_sec, x)
 
     # Estimate tangent vector by small step ahead
     dx = 0.01
@@ -119,8 +119,8 @@ def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
         'topol': {'parentSec': parent_sec.name(), 'parentX': x, 'childX': 0.0},
         'mechs': {'pas': {'g': 0.001, 'e': -65}},
         'pt3d': [
-            [x0, y0, z0, neck.diam],
-            [x0 + nx * offset, y0 + ny * offset, z0 + nz * offset, neck.diam]
+            [x0, z0, y0, neck.diam],
+            [x0 + nx * offset, z0 + nz * offset, y0 + ny * offset, neck.diam]
         ],
         'color': 'red'
     }
