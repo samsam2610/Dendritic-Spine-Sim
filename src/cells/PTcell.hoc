@@ -3917,6 +3917,14 @@ proc celldef () { localobj sp
             x0 = x3d(best_i)
             y0 = y3d(best_i)
             z0 = z3d(best_i)
+
+            pt3dclear(sec = sp.spine_neck)
+            pt3dadd(x0, y0, z0, sp.spine_neck.diam, sec = sp.spine_neck)
+            pt3dadd(x0, y0 + offset, z0, sp.spine_neck.diam, sec = sp.spine_neck)
+            pt3dclear(sec = sp.spine_head)
+            pt3dadd(x0, y0 + offset, z0, sp.spine_head.diam, sec = sp.spine_head)
+            pt3dadd(x0, y0 + offset + 0.4, z0, sp.spine_head.diam, sec = sp.spine_head)
+
         }
     }
 
