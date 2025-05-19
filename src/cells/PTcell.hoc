@@ -3864,8 +3864,10 @@ proc update_spine_plasticity() {
         // Basic voltage-based rule (e.g., LTP = elongate)
         if (spineObj.spine_head.v(0.5) > -40) {
             spineObj.spine_neck.L += 0.05
+            print "Spine ", i, " elongated to ", spineObj.spine_neck.L
         } else {
             spineObj.spine_neck.L -= 0.01
+            print "Spine ", i, " shrunk to ", spineObj.spine_neck.L
         }
 
         // Clamp to physiological bounds
