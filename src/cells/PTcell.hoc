@@ -3940,7 +3940,7 @@ proc celldef () { localobj sp
           ny = ny / nlen
           nz = nz / nlen
           offset = 5 // offset for the spine head
-          sp = new SpinyCell(x0, y0, z0, offset) // create a new spine object
+          sp = new SpinyCell(x0, y0, z0, nx*offset, ny*offset, nz*offset) // create a new spine object
           connect sp.spine_neck(0), x
           spineList.append(sp)
 
