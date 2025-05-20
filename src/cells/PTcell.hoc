@@ -3940,8 +3940,7 @@ proc celldef () { localobj sp
           ny = ny / nlen
           nz = nz / nlen
           offset = 1 // offset for the spine head
-          printf("Creating spine at (%g, %g, %g) with tangent (%g, %g, %g) and normal (%g, %g, %g)\\n",
-              x0, y0, z0, tx, ty, tz, nx, ny, nz)
+          printf("Creating spine at (%g, %g, %g) with tangent (%g, %g, %g) and normal (%g, %g, %g)\\n", x0, y0, z0, tx, ty, tz, nx, ny, nz)
           sp = new SpinyCell(x0, y0, z0, nx*offset, ny*offset, nz*offset) // create a new spine object
           connect sp.spine_neck(0), x
           spineList.append(sp)
