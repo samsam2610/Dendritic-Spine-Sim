@@ -170,6 +170,24 @@ if 'PT5B_full' not in loadCellParams:
     if cfg.useExplicitSpines:
         from neuron import h
         set_spine_plasticity_params()
+        for sec in h.allsec():
+        name = sec.name()
+        # Only register sections belonging to this cellRule!
+        # (Adjust the cell name check if your HOC uses something other than 'PTcell')
+        if name.startswith('PTcell') and ('.spine_neck' in name or '.spine_head' in name):
+            n3d = int(h.n3d(sec=sec))
+            pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
+            cellRule['secs'][name] = {
+                'geom': {
+                    'L': sec.L,
+                    'diam': sec.diam,
+                    'pt3d': pt3d,
+                },
+                'hObj': sec,
+                'spine': 1,   # For coloring in plotShape
+            }
+        print("Registered spines:", [k for k in cellRule['secs'] if 'spine' in k])
+
         
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
     netParams.saveCellParamsRule(label='PT5B_full', fileName='cells/PT5B_full_cellParams.pkl')
