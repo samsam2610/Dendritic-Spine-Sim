@@ -174,6 +174,7 @@ if 'PT5B_full' not in loadCellParams:
             name = sec.name()
             # Only register sections belonging to this cellRule!
             # (Adjust the cell name check if your HOC uses something other than 'PTcell')
+            print("Checking section:", name)
             if name.startswith('PTcell') and ('.spine_neck' in name or '.spine_head' in name):
                 n3d = int(h.n3d(sec=sec))
                 pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
@@ -186,7 +187,7 @@ if 'PT5B_full' not in loadCellParams:
                     'hObj': sec,
                     'spine': 1,   # For coloring in plotShape
                 }
-        print("Registered spines:", [k for k in cellRule['secs'] if 'spine' in k])
+            print("Registered spines:", [k for k in cellRule['secs'] if 'spine' in k])
 
         
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
