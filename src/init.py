@@ -43,30 +43,29 @@ cfg.afterSim.append(apply_tdcs_field)
 sim.create(netParams, cfg)
 sim.create(netParams, cfg)
 
-def register_explicit_spines():
-    for cell in sim.net.cells:
-        # Check if cell.secs is a function or dict
-        secs = cell.secs if isinstance(cell.secs, dict) else cell.secs()
-        if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
-            for sec in h.allsec():
-                name = sec.name()
-                if '.spine_neck' in name or '.spine_head' in name:
-                    print(f"Registering explicit spine for {cell.name} in section {name}")
-                    n3d = int(h.n3d(sec=sec))
-                    pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
-                    secs[name] = {
-                        'hObj': sec,
-                        'geom': {
-                            'L': sec.L,
-                            'diam': sec.diam,
-                            'pt3d': pt3d,
-                        },
-                        'spine': 1
-                    }
+# def register_explicit_spines():
+#     for cell in sim.net.cells:
+#         # Check if cell.secs is a function or dict
+#         secs = cell.secs if isinstance(cell.secs, dict) else cell.secs()
+#         if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
+#             for sec in h.allsec():
+#                 name = sec.name()
+#                 if '.spine_neck' in name or '.spine_head' in name:
+#                     n3d = int(h.n3d(sec=sec))
+#                     pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
+#                     secs[name] = {
+#                         'hObj': sec,
+#                         'geom': {
+#                             'L': sec.L,
+#                             'diam': sec.diam,
+#                             'pt3d': pt3d,
+#                         },
+#                         'spine': 1
+#                     }
 
 
 
-register_explicit_spines()
+# register_explicit_spines()
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()
 
