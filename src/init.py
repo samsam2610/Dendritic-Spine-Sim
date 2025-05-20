@@ -51,6 +51,7 @@ def register_explicit_spines():
             for sec in h.allsec():
                 name = sec.name()
                 if '.spine_neck' in name or '.spine_head' in name:
+                    print(f"Registering explicit spine for {cell.name} in section {name}")
                     n3d = int(h.n3d(sec=sec))
                     pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
                     secs[name] = {
