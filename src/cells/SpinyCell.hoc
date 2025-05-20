@@ -28,8 +28,8 @@ proc init() { local x0, y0, z0, offset
         g_pas = get_g_pas(L, diam)
         e_pas = -65
         pt3dclear()
-        pt3dadd(x0, y0, z0, 5)
-        pt3dadd(x0+dx, y0+dy, z0+dz, 5)
+        pt3dadd(x0, y0, z0, 20)
+        pt3dadd(x0+dx, y0+dy, z0+dz, 20)
     }
 
     // Randomize head geometry
@@ -46,8 +46,8 @@ proc init() { local x0, y0, z0, offset
         g_pas = get_g_pas(L, diam)
         e_pas = -65
         pt3dclear()
-        pt3dadd(x0, y0 + offset, z0, 6)
-        pt3dadd(x0+dx, y0 + dy + 0.4, dz, 6)
+        pt3dadd(x0, y0 + offset, z0, 30)
+        pt3dadd(x0+dx, y0 + dy + 0.4, dz, 30)
     }
 
     connect spine_head(0), spine_neck(1)
