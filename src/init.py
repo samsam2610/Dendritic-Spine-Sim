@@ -45,32 +45,25 @@ sim.create(netParams, cfg)
 
 def register_explicit_spines():
     for cell in sim.net.cells:
-        # This gives the NEURON object name, e.g., 'PTcell[0]'
-        try:
-            hoc_cellname = cell.hObj.hname()
-        except Exception:
-            # fallback: try to parse from tags or use index
-            hoc_cellname = None
-        # Typical fallback: extract from section name directly
-        for sec in h.allsec():
-            name = sec.name()
-            # Try to find a matching cell name in the section name, or just check for 'spine_neck'/'spine_head'
-            if ((hoc_cellname and name.startswith(f"{hoc_cellname}.spine_neck")) or
-                (hoc_cellname and name.startswith(f"{hoc_cellname}.spine_head")) or
-                (not hoc_cellname and ('.spine_neck' in name or '.spine_head' in name))):
-                n3d = int(h.n3d(sec=sec))
-                pt3d = []
-                if n3d >= 2:
-                    pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
-                cell.secs[name] = {
-                    'hObj': sec,
-                    'geom': {
-                        'L': sec.L,
-                        'diam': sec.diam,
-                        'pt3d': pt3d,
+        # Check if cell.secs is a function or dict
+        secs = cell.secs if isinstance(cell.secs, dict) else cell.secs()
+        if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
+            for sec in h.allsec():
+                name = sec.name()
+                if '.spine_neck' in name or '.spine_head' in name:
+                    n3d = int(h.n3d(sec=sec))
+                    pt3d = []
+                    if n3d >= 2:
+                        pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
+                    secs[name] = {
+                        'hObj': sec,
+                        'geom': {
+                            'L': sec.L,
+                            'diam': sec.diam,
+                            'pt3d': pt3d,
+                        }
                     }
-                }
-                cell.secs[name]['spine'] = True
+                    secs[name]['spine'] = True
 
 
 register_explicit_spines()
