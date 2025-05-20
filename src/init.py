@@ -41,124 +41,29 @@ if not hasattr(cfg, 'afterSim'):
 cfg.afterSim.append(apply_tdcs_field)
 
 sim.create(netParams, cfg)
-# 🔍 Check for spine initialization in PT cells by inspecting cell.secs
-pt_cells = [cell for cell in sim.net.cells if cell.tags.get('cellType') == 'PT']
-if not pt_cells:
-    print("⚠️  No PT cells found in network.")
-else:
-    for idx, cell in enumerate(pt_cells):
-        # Count sections named 'spine_neck' (one per spine)
-        spine_neck_secs = [secName for secName in cell.secs if secName.startswith('spine_neck')]
-        n_spines = len(spine_neck_secs)
-        if n_spines > 0:
-            print(f"✅ PT cell {idx}: {n_spines} spines initialized ({len(spine_neck_secs)} neck sections).")
-        else:
-            print(f"❌ PT cell {idx}: No spines found in cell.secs")
+sim.create(netParams, cfg)
 
-from neuron import h
-from math import cos, sin, pi
-
-def interpolate_pt3d(sec, x):
-    """Interpolates a 3D location at normalized arc length x along the section."""
-    npts = int(h.n3d(sec=sec))
-    if npts < 2:
-        raise ValueError(f"Section {sec.name()} has insufficient 3D points")
-
-    arc_total = h.arc3d(npts - 1, sec=sec)
-    target = x * arc_total
-
-    for i in range(npts - 1):
-        arc_i = h.arc3d(i, sec=sec)
-        arc_next = h.arc3d(i + 1, sec=sec)
-        if arc_i <= target <= arc_next:
-            frac = (target - arc_i) / (arc_next - arc_i)
-            x_val = h.x3d(i, sec=sec) + frac * (h.x3d(i + 1, sec=sec) - h.x3d(i, sec=sec))
-            y_val = h.y3d(i, sec=sec) + frac * (h.y3d(i + 1, sec=sec) - h.y3d(i, sec=sec))
-            z_val = h.z3d(i, sec=sec) + frac * (h.z3d(i + 1, sec=sec) - h.z3d(i, sec=sec))
-            return x_val, y_val, z_val
-    raise RuntimeError(f"Interpolation failed for section {sec.name()}, x={x}")
-
-
-def add_spine_at(cell, parent_sec, x, spine_idx, spine_length=1.5, offset=0.5):
-    """Attach a spine at location `x` along parent_sec with proper 3D orientation."""
-    import math
-
-    # Interpolate 3D coordinates
-    x0, y0, z0 = interpolate_pt3d(parent_sec, x)
-
-    # Estimate tangent vector by small step ahead
-    dx = 0.01
-    x1 = min(x + dx, 1.0)
-    x1_pos = interpolate_pt3d(parent_sec, x1)
-    tangent = [x1_pos[i] - x0 for i in range(3)]
-
-    # Compute perpendicular direction vector (approximate normal)
-    # Just rotate in XY plane (assumes flat morphology)
-    tx, ty, tz = tangent
-    norm_len = math.sqrt(tx**2 + ty**2 + 1e-9)
-    nx, ny, nz = -ty / norm_len, tx / norm_len, 0  # perpendicular in XY
-
-    # Create neck
-    neck = h.Section(name=f"spine_neck_{spine_idx}")
-    neck.L = spine_length
-    neck.diam = 0.2
-    neck.insert("pas")
-    neck.g_pas = 0.001
-    neck.e_pas = -65
-    neck.connect(parent_sec(x), 0.0)
-
-    # Place 3D points along the normal direction
-    h.pt3dclear(sec=neck)
-    h.pt3dadd(x0, z0, y0, 0.2, sec=neck)
-    h.pt3dadd(x0 + nx * offset, z0 + nz * offset, y0 + ny * offset, 0.2, sec=neck)
-
-    # Register in cell.secs so NetPyNE can visualize
-    cell.secs[f'spine_neck_{spine_idx}'] = {
-        'hObj': neck,
-        'geom': {'L': neck.L, 'diam': neck.diam},
-        'topol': {'parentSec': parent_sec.name(), 'parentX': x, 'childX': 0.0},
-        'mechs': {'pas': {'g': 0.001, 'e': -65}},
-        'pt3d': [
-            [x0, z0, y0, neck.diam],
-            [x0 + nx * offset, z0 + nz * offset, y0 + ny * offset, neck.diam]
-        ],
-        'color': 'red'
-    }
-
-    return neck
-
-
-
-def add_spines_to_PT5B_cells():
-    spine_idx = 0
-    offset_distance = 0.5  # microns; radial offset from dendrite
+def register_explicit_spines():
     for cell in sim.net.cells:
         if cell.tags.get('cellType') == 'PT' and cell.tags.get('cellModel') == 'HH_full':
-            for secName in list(cell.secs.keys()):
-                if 'apic' in secName or 'dend' in secName:
-                    parent = cell.secs[secName]['hObj']
-                    for x in [i / 20 for i in range(1, 20)]:  # 0.05 to 0.95
-                        add_spine_at(cell, parent, x, spine_idx)
-                        spine_idx += 1
+            for sec in h.allsec():
+                name = sec.name()
+                if name.startswith(f"{cell.hname()}.spine_neck") or name.startswith(f"{cell.hname()}.spine_head"):
+                    n3d = int(h.n3d(sec=sec))
+                    pt3d = []
+                    if n3d >= 2:
+                        pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
+                    cell.secs[name] = {
+                        'hObj': sec,
+                        'geom': {
+                            'L': sec.L,
+                            'diam': sec.diam,
+                            'pt3d': pt3d,
+                        }
+                    }
+                    cell.secs[name]['spine'] = True
 
-
-def get_3d_path(sec):
-        return [(h.x3d(i), h.y3d(i), h.z3d(i)) for i in range(int(h.n3d()))]
-
-# if cfg.useExplicitSpines:
-#     add_spines_to_PT5B_cells()
-
-#     for cell in sim.net.cells:
-#         if cell.tags.get('cellType') == 'PT':
-#             for secName, sec in cell.secs.items():
-#                 if secName.startswith('spine_neck'):
-#                     topol = sec.get('topol', {})
-#                     parent_name = topol.get('parentSec', 'unknown')
-#                     parent_x = topol.get('parentX', 'unknown')
-#                     print(f"{secName} connected to: {parent_name} at x={parent_x}")
-
-
-
+register_explicit_spines()
 # Apply any custom logic like tDCS (already added in cfg.afterSim)
 sim.simulate()
 

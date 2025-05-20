@@ -96,10 +96,11 @@ cfg.analysis['plotShape'] = {
     'dpi': 600, 
     'saveFig': True,     
     'shapeParams': {
-        'cvals': 'cval',  # this works if section names include 'spine'
-        'clim': [0, 10],
-        'colormap': 'viridis',
-    }
+        'cvals': 'spine',       # Color sections where cell.secs[secName]['spine']==True
+        'clim': [0, 1],         # 0: not spine, 1: spine
+        'colormap': 'viridis',  # or any
+        'sectionList': None, 
+	}
 }
 
 #------------------------------------------------------------------------------
