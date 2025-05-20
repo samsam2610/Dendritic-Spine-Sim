@@ -3902,26 +3902,47 @@ proc celldef () { localobj sp
         continue  // skip sections with insufficient 3D geometry
       }
       arc_total = arc3d(npts-1)
-        for (x = 0.0; x < 1.0; x += 0.01) {
-            // Find closest 3D point on parent
-            target_arc = x * arc_total
-            min_dist = 1e9
-            best_i = 0
-            for i=0, npts-1 {
-                arc = arc3d(i)
-                dist = abs(arc - target_arc)
-                if (dist < min_dist) {
-                    min_dist = dist
-                    best_i = i
-                }
-            }
-            x0 = x3d(best_i)
-            y0 = y3d(best_i)
-            z0 = z3d(best_i)
-            offset = 5 // offset for the spine head
-            sp = new SpinyCell(x0, y0, z0, offset) // create a new spine object
-            connect sp.spine_neck(0), x
-            spineList.append(sp)
+      for (x = 0.0; x < 1.0; x += 0.01) {
+          // Find closest 3D point on parent
+          target_arc = x * arc_total
+          min_dist = 1e9
+          best_i = 0
+          for i=0, npts-2 {  // ensure we can use i+1 safely!
+              arc = arc3d(i)
+              dist = abs(arc - target_arc)
+              if (dist < min_dist) {
+                  min_dist = dist
+                  best_i = i
+              }
+          }
+          // Interpolate location along segment for x0/y0/z0
+          f = (target_arc - arc3d(best_i)) / (arc3d(best_i+1) - arc3d(best_i) + 1e-12)
+          x0 = x3d(best_i) + f * (x3d(best_i+1) - x3d(best_i))
+          y0 = y3d(best_i) + f * (y3d(best_i+1) - y3d(best_i))
+          z0 = z3d(best_i) + f * (z3d(best_i+1) - z3d(best_i))
+          // Tangent vector
+          tx = x3d(best_i+1) - x3d(best_i)
+          ty = y3d(best_i+1) - y3d(best_i)
+          tz = z3d(best_i+1) - z3d(best_i)
+          tnorm = sqrt(tx*tx + ty*ty + tz*tz) + 1e-12
+          tx = tx / tnorm
+          ty = ty / tnorm
+          tz = tz / tnorm
+          // "Up" vector (use z unless tangent is vertical, then use x)
+          upx = 0  upy = 0  upz = 1
+          if (abs(tz) > 0.99) { upx = 1 upy = 0 upz = 0 }
+          // Normal vector via cross product (tangent x up)
+          nx = ty * upz - tz * upy
+          ny = tz * upx - tx * upz
+          nz = tx * upy - ty * upx
+          nlen = sqrt(nx*nx + ny*ny + nz*nz) + 1e-12
+          nx = nx / nlen
+          ny = ny / nlen
+          nz = nz / nlen
+          offset = 5 // offset for the spine head
+          sp = new SpinyCell(x0, y0, z0, offset) // create a new spine object
+          connect sp.spine_neck(0), x
+          spineList.append(sp)
 
 
         }
