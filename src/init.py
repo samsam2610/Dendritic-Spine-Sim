@@ -52,18 +52,17 @@ def register_explicit_spines():
                 name = sec.name()
                 if '.spine_neck' in name or '.spine_head' in name:
                     n3d = int(h.n3d(sec=sec))
-                    pt3d = []
-                    if n3d >= 2:
-                        pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
+                    pt3d = [[h.x3d(i, sec=sec), h.y3d(i, sec=sec), h.z3d(i, sec=sec), h.diam3d(i, sec=sec)] for i in range(n3d)]
                     secs[name] = {
                         'hObj': sec,
                         'geom': {
                             'L': sec.L,
                             'diam': sec.diam,
                             'pt3d': pt3d,
-                        }
+                        },
+                        'spine': 1
                     }
-                    secs[name]['spine'] = True
+
 
 
 register_explicit_spines()
