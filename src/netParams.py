@@ -187,7 +187,7 @@ if 'PT5B_full' not in loadCellParams:
                     'hObj': sec,
                     'spine': 1,   # For coloring in plotShape
                 }
-            print("Registered spines:", [k for k in cellRule['secs'] if 'spine' in k])
+        print("Registered spines:", [k for k in cellRule['secs'] if 'spine' in k])
 
         
     netParams.addCellParamsWeightNorm('PT5B_full', 'conn/PT5B_full_weightNorm.pkl', threshold=cfg.weightNormThreshold)  # load weight norm
